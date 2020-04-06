@@ -26,8 +26,6 @@
     <Content Include="file.jpg" />
     <Content Include="h.jpg" />
     <Content Include="pobrane.jpg" />
-    <Content Include="wand.jpg" />
-    <Content Include="wand1.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="potion.py">

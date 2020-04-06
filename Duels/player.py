@@ -10,10 +10,10 @@ class Player:
         self.house=house
         self.health=year*10
         self.mods = [1,1,1,1]
-        self.modpotion=1
-        self.modhealth=1
-        self.modspell=1
-        self.modmagic=1
+        self.modpotion=slef.mods[0]
+        self.modhealth=slef.mods[1]
+        self.modspell=slef.mods[2]
+        self.modmagic=slef.mods[3]
         self.shield=0
         self.pos=[1,0,0]
         self.maxh=year*10
@@ -152,25 +152,25 @@ class Player:
                 }
     
     def mod(self,wand):
-        self.modpotion = 0.5 + 0.1 * self.year
-        self.modmagic = 0.5 + 0.1 * self.year
-        self.modspell = 0.5 + 0.1 * self.year
-        self.modhealth = 0.5 + 0.1 * self.year
+        self.mods[0] = 0.5 + 0.1 * self.year
+        self.mods[1] = 0.5 + 0.1 * self.year
+        self.mods[2] = 0.5 + 0.1 * self.year
+        self.mods[3] = 0.5 + 0.1 * self.year
         for x in self.modh_dict:
             if self.house == x:
-                self.modpotion = self.modpotion + self.modh_dict[x][0]
-                self.modhealth = self.modhealth + self.modh_dict[x][1]
-                self.modspell = self.modspell + self.modh_dict[x][2]
-                self.modmagic = self.modmagic + self.modh_dict[x][3]
+                self.mods[0] = self.mods[0] + self.modh_dict[x][0]
+                self.mods[1] = self.mods[1] + self.modh_dict[x][1]
+                self.mods[2] = self.mods[2] + self.modh_dict[x][2]
+                self.mods[3] = self.mods[3] + self.modh_dict[x][3]
         for x in self.modwc_dict:
             if wand.core == x:
-                self.modpotion = self.modpotion + self.modwc_dict[x][0]
-                self.modhealth = self.modhealth + self.modwc_dict[x][1]
-                self.modspell = self.modspell + self.modwc_dict[x][2]
-                self.modmagic = self.modmagic + self.modwc_dict[x][3]
+                self.mods[0] = self.mods[0] + self.modwc_dict[x][0]
+                self.mods[1] = self.mods[1] + self.modwc_dict[x][1]
+                self.mods[2] = self.mods[2] + self.modwc_dict[x][2]
+                self.mods[3] = self.mods[3] + self.modwc_dict[x][3]
         for x in self.modwl_dict:
             if wand.lenght == x:
-                self.modpotion = self.modpotion + self.modwl_dict[x][0]
-                self.modhealth = self.modhealth + self.modwl_dict[x][1]
-                self.modspell = self.modspell + self.modwl_dict[x][2]
-                self.modmagic = self.modmagic + self.modwl_dict[x][3]
+                self.mods[0] = self.mods[0] + self.modwl_dict[x][0]
+                self.mods[1] = self.mods[1] + self.modwl_dict[x][1]
+                self.mods[2] = self.mods[2] + self.modwl_dict[x][2]
+                self.mods[3] = self.mods[3] + self.modwl_dict[x][3]
