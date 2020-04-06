@@ -427,6 +427,35 @@ def action2(player1,player2,potion,potionind,x):
     if player2.shield == 1:
         player2.shield = 0
         
+
+def resoult(player=None):
+    while 1:
+        if player != None :
+            text_surf, text_rect = text(str("Wygral " + player.name), lfont,BLUE)
+        else:
+            text_surf, text_rect = text(str("Remis"), lfont,BLUE)
+        text_rect.center = ((size + 400) / 2), ((size - 300) / 2)
+        map.blit(text_surf, text_rect)
+        pd.update()
+        button("Reset", 500,200, 100, 100, GREEN)
+        button("Reset postaci",500,300,100,100,ORANGE)
+        button("Menu",500,400,100,100,RED)
+        for e in pg.event.get():
+            button("Reset", 500,200, 100, 100, GREEN,game)
+            button("Reset postaci",500,300,100,100,ORANGE,preparation)
+            button("Menu",500,400,100,100,RED,menu)
+            if e.type == pg.QUIT:
+                pg.quit()
+                sys.exit(0)
+            if e.type == KEYDOWN:
+                if e.key == K_o:
+                    #pg.mixer.music.pause()
+                    print("ok")
+                if e.key == K_i:        
+                    #pg.mixer.music.unpause()
+                    print("ok")
+
+
 def preparation():
     list_year = [1,2,3,4,5,6,7,"Wybierz rok:"]
     list_year2 = [WHITE] * 7 
@@ -513,76 +542,11 @@ def game():
         map.blit(text_surf, text_rect)
         
         if (x.health <= 0 and y.health > 0):
-            while 1:
-                text_surf, text_rect = text(str("Wygral " + y.name), lfont,BLUE)
-                text_rect.center = ((size + 400) / 2), ((size - 300) / 2)
-                map.blit(text_surf, text_rect)
-                pd.update()
-                button("Reset", 500,200, 100, 100, GREEN)
-                button("Reset postaci",500,300,100,100,ORANGE)
-                button("Menu",500,400,100,100,RED)
-                for e in pg.event.get():
-                    button("Reset", 500,200, 100, 100, GREEN,game)
-                    button("Reset postaci",500,300,100,100,ORANGE,preparation)
-                    button("Menu",500,400,100,100,RED,menu)
-                    if e.type == pg.QUIT:
-                        pg.quit()
-                        sys.exit(0)
-                    if e.type == KEYDOWN:
-                        if e.key == K_o:
-                            #pg.mixer.music.pause()
-                            print("ok")
-                        if e.key == K_i:        
-                            #pg.mixer.music.unpause()
-                            print("ok")
-
+            resoult(y)
         if (y.health <= 0 and x.health > 0):
-            while 1:
-                text_surf, text_rect = text(str("Wygral " + x.name), lfont,BLUE)
-                text_rect.center = ((size + 400) / 2), ((size - 300) / 2)
-                map.blit(text_surf, text_rect)
-                pd.update()
-                button("Reset", 500,200, 100, 100, GREEN)
-                button("Reset postaci",500,300,100,100,ORANGE)
-                button("Menu",500,400,100,100,RED)
-                for e in pg.event.get():
-                    button("Reset", 500,200, 100, 100, GREEN,game)
-                    button("Reset postaci",500,300,100,100,ORANGE,preparation)
-                    button("Menu",500,400,100,100,RED,menu)
-                    if e.type == pg.QUIT:
-                        pg.quit()
-                        sys.exit(0)
-                    if e.type == KEYDOWN:
-                        if e.key == K_o:
-                            pg.mixer.music.pause()
-                        if e.key == K_i:        
-                            pg.mixer.music.unpause()
+            resoult(x)
         if  x.health <=0 and y.health <= 0:
-          while 1:
-                text_surf, text_rect = text(str("Remis"), lfont,BLUE)
-                text_rect.center = ((size + 400) / 2), ((size - 300) / 2)
-                map.blit(text_surf, text_rect)
-                pd.update()
-                button("Reset", 500,200, 100, 100, GREEN)
-                button("Reset postaci",500,200,100,100,ORANGE)
-                button("Menu",500,400,100,100,RED)
-                for e in pg.event.get():
-                    button("Reset", 500,200, 100, 100, GREEN,game)
-                    button("Reset postaci",500,200,100,100,ORANGE,preparation)
-                    button("Menu",500,400,100,100,RED,menu)
-                    if e.type == pg.QUIT:
-                        pg.quit()
-                        sys.exit(0)
-                    if e.type == KEYDOWN:
-                        if e.key == K_o:
-                            #pg.mixer.music.pause()
-                            print("ok")
-                        if e.key == K_i:
-                            #pg.mixer.music.unpause()
-                            print("ok")
-
-
-        
+            resoult()
 
         for i in range(4):
             if i == player_1.next[0] or i == player_1.next[1]:
