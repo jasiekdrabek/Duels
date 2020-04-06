@@ -590,21 +590,16 @@ def game():
             text_surf, text_rect = text(str("tura gracza: " + x.name),lfont,BLUE)
             text_rect.center = (500,300)
             map.blit(text_surf, text_rect)
-
-        if turn % 4 == 1:
-            text_surf, text_rect = text(str("Faza 1: ruch"),mfont,WHITE)
-            text_rect.center = (500,80)
-            map.blit(text_surf, text_rect)
-
-        if turn % 4 == 2:
-            text_surf, text_rect = text(str("Faza 2: wybor akcji"),mfont,WHITE)
-            text_rect.center = (500,80)
-            map.blit(text_surf, text_rect)
-
-        if turn % 4 == 3:
-            text_surf, text_rect = text(str("Faza 3: wybor celu akcji"),mfont,WHITE)
-            text_rect.center = (500,80)
-            map.blit(text_surf, text_rect)
+        
+        phase=["",
+               "Faza 1: ruch",
+               "Faza 2: wybor akcji",
+               "Faza 3: wybor celu akcji"
+               ]
+        
+        text_surf, text_rect = text(str(phase[turn % 4]),mfont,WHITE)
+        text_rect.center = (500,80)
+        map.blit(text_surf, text_rect)
 
         for i in range (2):
             if i == 1:
