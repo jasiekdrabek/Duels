@@ -129,3 +129,45 @@ class Player:
         self.maxm = self.magic
         self.health = int(max((self.year * 10 + 10)* self.mod_health(wand),20))
         self.maxh = self.health
+
+    '''''
+                             # potion,health,spell,magic                       
+    modh_dict = {"Slytherin" : ( 0.2,-0.2,   0,   0),
+                "Gryffindor" : (-0.2,   0, 0.2,   0),
+                "Hufflepuff" : (   0, 0.2,   0,-0.2),
+                "Ravenclaw"  : (   0,   0,-0.2, 0.2)
+                }
+
+    modwc_dict ={"Chimera"   : ( 0.2,   0,-0.2,   0),
+                "Dragon"     : (-0.2,   0,   0, 0.2),
+                "Unicorn"    : (   0, 0.2,   0,-0.2),
+                "Phoenix"    : (   0,-0.2, 0.2,   0)
+                }
+
+    modwl_dict ={12          : ( 0.2, 0.2,-0.2,-0.2),
+                11           : ( 0.1, 0.1,-0.1,-0.1),
+                9            : (-0.1,-0.1, 0.1, 0.1),
+                8            : (-0.2,-0.2, 0.2, 0.2)
+                }
+    
+    def mod(self,wand):
+        self.modpotion = 0.5 + 0.1 * self.year
+        for x in modh_dict:
+            if self.house == x:
+                self.modpotion = self.modpotion + mod_dict[x[0]]
+                self.modhealth = self.modhealth + mod_dict[x[1]]
+                self.modspell = self.modspell + mod_dict[x[2]]
+                self.modmagic = self.modmagic + mod_dict[x[3]]
+        for x in modwc_dict:
+            if wand.core == x:
+                self.modpotion = self.modpotion + mod_dict[x[0]]
+                self.modhealth = self.modhealth + mod_dict[x[1]]
+                self.modspell = self.modspell + mod_dict[x[2]]
+                self.modmagic = self.modmagic + mod_dict[x[3]]
+        for x in modh_dict:
+            if wand.lenght == x:
+                self.modpotion = self.modpotion + mod_dict[x[0]]
+                self.modhealth = self.modhealth + mod_dict[x[1]]
+                self.modspell = self.modspell + mod_dict[x[2]]
+                self.modmagic = self.modmagic + mod_dict[x[3]]
+                '''''
