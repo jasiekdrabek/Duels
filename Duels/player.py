@@ -9,10 +9,11 @@ class Player:
         self.year=year
         self.house=house
         self.health=year*10
-        self.modmagic=1
-        self.modspell=1
-        self.modhealth=1
+        self.mods = [1,1,1,1]
         self.modpotion=1
+        self.modhealth=1
+        self.modspell=1
+        self.modmagic=1
         self.shield=0
         self.pos=[1,0,0]
         self.maxh=year*10
@@ -21,7 +22,7 @@ class Player:
         self.magic=year*10
         self.maxm = year * 10
         self.potion_number=[]
-
+        '''
     def mod_potion(self,wand):
         self.modpotion = 0.5 + 0.1 * self.year
         if self.house == "Slytherin":
@@ -41,7 +42,6 @@ class Player:
         if wand.core == "Dragon" :
             self.modpotion = self.modpotion - 0.2
         return self.modpotion
-
     def mod_health(self,wand) :
         self.modhealth = 0.5 + 0.1 * self.year
         if self.house == "Hufflepuff":
@@ -100,6 +100,7 @@ class Player:
             self.modmagic = self.modmagic - 0.2
 
         return self.modmagic
+    '''
 
     def imgs(self):
         img=""
@@ -119,18 +120,18 @@ class Player:
         wand.pos[2] = wand.pos[0]*100+100
         wand.pos[3] = wand.pos[0]*100+100
         self.next=[4,4,4,4,4]
-        self.modpotion = self.mod_potion(wand)
-        self.modspell = self.mod_spell(wand)
-        self.magic = int(max((self.year * 10 + 10) * self.mod_magic(wand),20))
+        self.mod(wand)
+        self.modpotion = self.mods[0]
+        self.modspell = self.mods[2]
+        self.magic = int(max((self.year * 10 + 10) * self.mods[3],20))
         if self.magic % 10 < 5:
             self.magic = self.magic - self.magic % 10
         else:
             self.magic = self.magic - self.magic % 10 + 10
         self.maxm = self.magic
-        self.health = int(max((self.year * 10 + 10)* self.mod_health(wand),20))
+        self.health = int(max((self.year * 10 + 10)* self.mods[1],20))
         self.maxh = self.health
 
-    '''''
                              # potion,health,spell,magic                       
     modh_dict = {"Slytherin" : ( 0.2,-0.2,   0,   0),
                 "Gryffindor" : (-0.2,   0, 0.2,   0),
@@ -152,22 +153,24 @@ class Player:
     
     def mod(self,wand):
         self.modpotion = 0.5 + 0.1 * self.year
-        for x in modh_dict:
+        self.modmagic = 0.5 + 0.1 * self.year
+        self.modspell = 0.5 + 0.1 * self.year
+        self.modhealth = 0.5 + 0.1 * self.year
+        for x in self.modh_dict:
             if self.house == x:
-                self.modpotion = self.modpotion + mod_dict[x[0]]
-                self.modhealth = self.modhealth + mod_dict[x[1]]
-                self.modspell = self.modspell + mod_dict[x[2]]
-                self.modmagic = self.modmagic + mod_dict[x[3]]
-        for x in modwc_dict:
+                self.modpotion = self.modpotion + self.modh_dict[x][0]
+                self.modhealth = self.modhealth + self.modh_dict[x][1]
+                self.modspell = self.modspell + self.modh_dict[x][2]
+                self.modmagic = self.modmagic + self.modh_dict[x][3]
+        for x in self.modwc_dict:
             if wand.core == x:
-                self.modpotion = self.modpotion + mod_dict[x[0]]
-                self.modhealth = self.modhealth + mod_dict[x[1]]
-                self.modspell = self.modspell + mod_dict[x[2]]
-                self.modmagic = self.modmagic + mod_dict[x[3]]
-        for x in modh_dict:
+                self.modpotion = self.modpotion + self.modwc_dict[x][0]
+                self.modhealth = self.modhealth + self.modwc_dict[x][1]
+                self.modspell = self.modspell + self.modwc_dict[x][2]
+                self.modmagic = self.modmagic + self.modwc_dict[x][3]
+        for x in self.modwl_dict:
             if wand.lenght == x:
-                self.modpotion = self.modpotion + mod_dict[x[0]]
-                self.modhealth = self.modhealth + mod_dict[x[1]]
-                self.modspell = self.modspell + mod_dict[x[2]]
-                self.modmagic = self.modmagic + mod_dict[x[3]]
-                '''''
+                self.modpotion = self.modpotion + self.modwl_dict[x][0]
+                self.modhealth = self.modhealth + self.modwl_dict[x][1]
+                self.modspell = self.modspell + self.modwl_dict[x][2]
+                self.modmagic = self.modmagic + self.modwl_dict[x][3]
