@@ -10,10 +10,10 @@ class Player:
         self.house=house
         self.health=year*10
         self.mods = [1,1,1,1]
-        self.modpotion=slef.mods[0]
-        self.modhealth=slef.mods[1]
-        self.modspell=slef.mods[2]
-        self.modmagic=slef.mods[3]
+        self.modpotion=self.mods[0]
+        self.modhealth=self.mods[1]
+        self.modspell=self.mods[2]
+        self.modmagic=self.mods[3]
         self.shield=0
         self.pos=[1,0,0]
         self.maxh=year*10
