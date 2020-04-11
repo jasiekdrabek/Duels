@@ -15,7 +15,7 @@ class Player:
         self.modspell=self.mods[2]
         self.modmagic=self.mods[3]
         self.shield=0
-        self.pos=[1,0,0]
+        self.pos=[1,0,0,0]
         self.maxh=year*10
         self.next=[4,4,4,4]
         self.move=1

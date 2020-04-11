@@ -7,6 +7,8 @@ from pygame.locals import *
 pg=pygame
 pd=pg.display
 pg.init()
+FPS = 16 
+fpsClock = pygame.time.Clock()
 press = 0
 index = 0
 player_1 = Player("",0,"")
@@ -46,7 +48,7 @@ def text(text, font, color = BLACK):
     return text_surface, text_surface.get_rect()
 
     
-def button(msg, x, y, width, height, color, action = None,arg1 = None, arg2 = None, arg3 = None, arg4 = None, arg5 = None, arg6 = None):
+def button(msg, x, y, width, height, color, action = None,args = None):
 
     global press
     width_half = width / 2
@@ -62,18 +64,8 @@ def button(msg, x, y, width, height, color, action = None,arg1 = None, arg2 = No
         if press == 1 and click[0] == 0:
             press = 0
             if (action != None):
-                if arg1 != None and arg2 != None and arg3 != None and arg4 != None and arg5 != None and arg6 != None:
-                    action (arg1,arg2,arg3,arg4,arg5,arg6)
-                elif arg1 != None and arg2 != None and arg3 != None and arg4 != None and arg5 != None and arg6 == None:
-                    action(arg1,arg2,arg3,arg4,arg5)
-                elif arg1 != None and arg2 != None and arg3 != None and arg4 != None and arg5 == None and arg6 == None:
-                    action(arg1,arg2,arg3,arg4)
-                elif arg1 != None and arg2 != None and arg3 != None and arg4 == None and arg5 == None and arg6 == None:
-                    action(arg1,arg2,arg3)
-                elif arg1 != None and arg2 != None and arg3 == None and arg4 == None and arg5 == None and arg6 == None:
-                    action(arg1,arg2)
-                elif arg1 != None and arg2 == None and arg3 == None and arg4 == None and arg5 == None and arg6 == None:
-                    action(arg1)
+                if args != None :
+                    action (*args)
                 else:
                     action()
     
@@ -107,9 +99,9 @@ def how(x):
         button("elisiry",900,300,100,100,RED,how3)
         button("menu",900,400,100,100,RED,menu)
         if x == "how.jpg":
-            button("dalej",450,550,100,50,BLUE,how,"how2.jpg")
+            button("dalej",450,550,100,50,BLUE,how,["how2.jpg"])
         else:
-            button("powrot",450,0,100,50,BLUE,how,"how.jpg")
+            button("powrot",450,0,100,50,BLUE,how,["how.jpg"])
         pd.flip()
         for e in pg.event.get():
             if e.type==pg.QUIT:
@@ -127,12 +119,12 @@ def how2():
     while True:
         
         map.fill((255,255,255))
-        button("podstawy",900,100,100,100,RED,how,"how.jpg")
+        button("podstawy",900,100,100,100,RED,how,["how.jpg"])
         button("zaklecia",900,200,100,100,YELLOW)
         button("elisiry",900,300,100,100,RED,how3)
         button("menu",900,400,100,100,RED,menu)
-        button("poprzednie",200,250,100,100,ORANGE,minus,index,spells)
-        button("nastepne",700,250,100,100,ORANGE,plus,index,spells)       
+        button("poprzednie",200,250,100,100,ORANGE,minus,[index,spells])
+        button("nastepne",700,250,100,100,ORANGE,plus,[index,spells])       
         text_surf, text_rect = text("Nazwa: " + str(spells[index].name), font,BLACK)
         text_rect.center = (500,250)
         map.blit(text_surf, text_rect)
@@ -164,12 +156,12 @@ def how3():
     while True:
    
         map.fill((255,255,255))
-        button("podstawy",900,100,100,100,RED,how,"how.jpg")
+        button("podstawy",900,100,100,100,RED,how,["how.jpg"])
         button("zaklecia",900,200,100,100,RED,how2)
         button("elisiry",900,300,100,100,YELLOW)
         button("menu",900,400,100,100,RED,menu)
-        button("poprzednie",200,250,100,100,ORANGE,minus,index,potions)
-        button("nastepne",700,250,100,100,ORANGE,plus,index,potions)       
+        button("poprzednie",200,250,100,100,ORANGE,minus,[index,potions])
+        button("nastepne",700,250,100,100,ORANGE,plus,[index,potions])       
         text_surf, text_rect = text("Nazwa: " + str(potions[index].name), font,BLACK)
         text_rect.center = (500,250)
         map.blit(text_surf, text_rect)
@@ -224,7 +216,7 @@ def menu():
         map.blit(obraz,(0,0))
 
         button("Graj", 400, 300, 200, 100, GREEN, preparation)
-        button("Jak grac", 400, 400, 200, 100, YELLOW, how,"how.jpg")
+        button("Jak grac", 400, 400, 200, 100, YELLOW, how,["how.jpg"])
         button("wyjscie", 400, 500, 200, 100,RED , exit)
         
         pd.update()
@@ -261,7 +253,7 @@ def write(player):
         if player.index >0:
             temp[0] = ORANGE
 
-        button("Gotowe",400,450,200,100,temp[0],ready,temp)
+        button("Gotowe",400,450,200,100,temp[0],ready,[temp])
         if temp[0] != ORANGE and temp[0] != RED:
             o=0
         pd.update()
@@ -303,7 +295,7 @@ def choose(p,player,list1,list2,list3=None):
         map.blit(text_surf, text_rect)
 
         for i in range (len(list2)):
-            button(str(list1[i]),x,220,100,100,list2[i],set,player,list1,list2,i)
+            button(str(list1[i]),x,220,100,100,list2[i],set,[player,list1,list2,i])
             y=340
             if list3 != None:
                 for j in range(4): 
@@ -318,7 +310,7 @@ def choose(p,player,list1,list2,list3=None):
         if list2.count(GREEN) == 1:
             temp[0] = ORANGE
 
-        button("Gotowe",400,450,200,100,temp[0],ready,temp,list2)
+        button("Gotowe",400,450,200,100,temp[0],ready,[temp,list2])
 
         if temp[0] != ORANGE and temp[0] != RED:
             i = list2.index(GREEN)
@@ -437,13 +429,10 @@ def resoult(player=None):
         text_rect.center = ((size + 400) / 2), ((size - 300) / 2)
         map.blit(text_surf, text_rect)
         pd.update()
-        button("Reset", 500,200, 100, 100, GREEN)
-        button("Reset postaci",500,300,100,100,ORANGE)
-        button("Menu",500,400,100,100,RED)
+        button("Reset", 500,200, 100, 100, GREEN,game)
+        button("Reset postaci",500,300,100,100,ORANGE,preparation)
+        button("Menu",500,400,100,100,RED,menu)
         for e in pg.event.get():
-            button("Reset", 500,200, 100, 100, GREEN,game)
-            button("Reset postaci",500,300,100,100,ORANGE,preparation)
-            button("Menu",500,400,100,100,RED,menu)
             if e.type == pg.QUIT:
                 pg.quit()
                 sys.exit(0)
@@ -504,15 +493,16 @@ def game():
     x_x = 270
     x_y = 200
     wx_x = x_x + 98
-    nx_y = x_y
     y_x = 630
     y_y = 200
     wy_x = y_x - 60
     ny_y = y_y
     player_1.pos[1] = x_x
     player_1.pos[2] = x_y
+    player_1.pos[3] = x_y
     player_2.pos[1] = y_x
     player_2.pos[2] = y_y
+    player_2.pos[3] = y_y
     spells_indx = 0
     spells_indy = 0
     potions_indx = 0
@@ -524,6 +514,8 @@ def game():
         player_2.potion_number.append(potions[x].number + int(player_2.year / 2))
     image = pg.image.load(player_1.imgs())
     image2 = pg.image.load(player_2.imgs())
+    flame_imgs=["flame1.png","flame2.png","flame3.png","flame4.png","flame5.png","flame6.png","flame7.png","flame8.png"]
+    animations_count = 0
 
     while 1:
 
@@ -532,10 +524,14 @@ def game():
         
         if (turn % 8 < 4) :
             x = player_1
+            x_wand = wand_1
             y = player_2
+            y_wand = wand_2
         else:
             x = player_2
+            x_wand = wand_2
             y = player_1
+            y_wand = wand_1
 
         text_surf, text_rect = text(str("Tura gracza: " + x.name),mfont,WHITE)
         text_rect.center = (500,50)
@@ -549,8 +545,9 @@ def game():
             resoult()
 
         for i in range(4):
+            flame_img = pg.image.load(flame_imgs[animations_count % len(flame_imgs)])
             if i == player_1.next[0] or i == player_1.next[1]:
-                button("",x_x - 25,i*100+ 100,150,100,RED)
+                map.blit(flame_img,(x_x,i*100 +100))
             elif i == player_1.next[2] or i == player_1.next[3]:
                 button("",x_x - 25,i*100+ 100,150,100,GREEN)
             else:
@@ -567,9 +564,10 @@ def game():
                 button("",y_x,i*100+100,100,100,ORANGE)
             if i == player_2.next[4] :
                 button("",x_x,i*100+100,100,100,ORANGE)
+        animations_count = animations_count + 1
 
         if turn % 8 == 1 :
-            player_1.pos[2] = nx_y
+            player_1.pos[2] = player_1.pos[3]
             wand_1.pos[2] = wand_1.pos[3]
             map.blit(image,(x_x,player_1.pos[2]))
             map.blit(wand_p1,(wx_x,wand_1.pos[2]))
@@ -578,7 +576,7 @@ def game():
             map.blit(wand_p1,(wx_x,wand_1.pos[2]))
         
         if turn % 8 == 5 :
-            player_2.pos[2] = ny_y
+            player_2.pos[2] = player_2.pos[3]
             wand_2.pos[2] = wand_2.pos[3]
             map.blit(image2,(y_x,player_2.pos[2]))
             map.blit(wand_p2,(wy_x,wand_2.pos[2]))
@@ -676,16 +674,14 @@ def game():
             map.blit(text_surf, text_rect)
 
 
-        button("Reset", 850, 450, 150, 50, GREEN)
-        button("Reset postaci",850,500,150,50,ORANGE)
-        button("Menu",850,550,150,50,RED)
+        button("Reset", 850, 450, 150, 50, GREEN,game)
+        button("Reset postaci",850,500,150,50,ORANGE,preparation)
+        button("Menu",850,550,150,50,RED,exit)
 
         pd.update()
+        fpsClock.tick(FPS)
         
         for e in pg.event.get():
-            button("Reset", 850, 450, 150, 50, GREEN,game)
-            button("Reset postaci",850,500,150,50,ORANGE,preparation)
-            button("Menu",850,550,150,50,RED,menu)
             
             if e.type == pg.QUIT:
                 pg.quit()
@@ -696,17 +692,17 @@ def game():
                     if e.key == K_RETURN:
                         turn = turn + 1
 
-                if turn % 8 == 1 :
+                if turn % 4 == 1 :
                     if e.key == K_RIGHT or e.key == K_LEFT:
                         turn = turn + 1
                                      
                     if e.key == K_UP:
                         if x.move == 1:
-                            if x.pos[0] == wand_1.pos[0]:
-                                wand_1.pos[0] = max(x.pos[0] - 1,0)
-                                wand_1.pos[3] = wand_1.pos[0] * 100 + 100
+                            if x.pos[0] == x_wand.pos[0]:
+                                x_wand.pos[0] = max(x.pos[0] - 1,0)
+                                x_wand.pos[3] = x_wand.pos[0] * 100 + 100
                             x.pos[0] = max(x.pos[0] - 1,0)
-                            nx_y = max(100,x.pos[2] - 100)
+                            x.pos[3] = max(100,x.pos[2] - 100)
                         else:
                             x.move = 1
                         
@@ -714,16 +710,16 @@ def game():
                             
                     if e.key == K_DOWN:
                         if x.move == 1:
-                            if x.pos[0] == wand_1.pos[0]:
-                                wand_1.pos[0] = min(x.pos[0] + 1,3)
-                                wand_1.pos[3]= wand_1.pos[0] * 100 + 100
+                            if x.pos[0] == x_wand.pos[0]:
+                                x_wand.pos[0] = min(x.pos[0] + 1,3)
+                                x_wand.pos[3]= x_wand.pos[0] * 100 + 100
                             x.pos[0] = min(x.pos[0]+1,3)
-                            nx_y = min(400,x.pos[2] + 100)
+                            x.pos[3] = min(400,x.pos[2] + 100)
                         else:
                             x.move = 1
                         
                         turn = turn + 1
-                        
+                        '''
                 if turn % 8 == 5:
                         
                     if e.key == K_RIGHT or e.key == K_LEFT:
@@ -750,7 +746,7 @@ def game():
                             ny_y = min(400,x.pos[2] + 100)
 
                         turn = turn + 1
-                        
+                        '''
                 if turn % 8 == 2:
                     if e.key == K_q:
                         if (x.magic >= spells[spells_indx].cost and player_1.pos[0] == wand_1.pos[0]) or spells[spells_indx].name == "Brak":
