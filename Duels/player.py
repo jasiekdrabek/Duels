@@ -6,6 +6,8 @@ class Player:
     def __init__(self,name,year,house):
         self.name=name
         self.index = 0
+        self.spells_ind = 0 
+        self.potions_ind = 0 
         self.year=year
         self.house=house
         self.health=year*10
@@ -15,92 +17,37 @@ class Player:
         self.modspell=self.mods[2]
         self.modmagic=self.mods[3]
         self.shield=0
-        self.pos=[1,0,0,0]
+        self.pos=[1,0,0,0] # [0-3,x,y,next_y]
         self.maxh=year*10
         self.next=[4,4,4,4]
         self.move=1
         self.magic=year*10
         self.maxm = year * 10
         self.potion_number=[]
-        '''
-    def mod_potion(self,wand):
-        self.modpotion = 0.5 + 0.1 * self.year
-        if self.house == "Slytherin":
-            self.modpotion = self.modpotion + 0.2
-        if wand.core == "Chimera":
-            self.modpotion = self.modpotion + 0.2
-        if wand.lenght == 12 :
-            self.modpotion = self.modpotion + 0.2
-        if wand.lenght == 11:
-            self.modpotion = self.modpotion + 0.1
-        if wand.lenght == 9:
-            self.modpotion = self.modpotion - 0.1
-        if wand.lenght == 8:
-            self.modpotion = self.modpotion - 0.2
-        if self.house == "Gryffindor":
-            self.modpotion = self.modpotion - 0.2
-        if wand.core == "Dragon" :
-            self.modpotion = self.modpotion - 0.2
-        return self.modpotion
-    def mod_health(self,wand) :
-        self.modhealth = 0.5 + 0.1 * self.year
-        if self.house == "Hufflepuff":
-            self.modhealth = self.modhealth + 0.2
-        if wand.core == "Unicorn":
-            self.modhealth = self.modhealth + 0.2
-        if wand.lenght == 12:
-            self.modhealth = self.modhealth + 0.2
-        if wand.lenght == 11:
-            self.modhealth = self.modhealth + 0.1
-        if wand.lenght == 9:
-            self.modhealth = self.modhealth - 0.1
-        if wand.lenght == 8:
-            self.modhealth = self.modhealth - 0.2
-        if self.house == "Slytherin":
-            self.modhealth = self.modhealth - 0.2
-        if wand.core == "Phoenix":
-            self.modhealth = self.modhealth - 0.2
-        return self.modhealth
-    def mod_spell(self,wand) :
-        self.modspell = 0.5 + 0.1 * self.year
-        if self.house == "Gryffindor":
-            self.modspell = self.modspell + 0.2
-        if wand.core == "Phoenix":
-            self.modspell = self.modspell + 0.2
-        if wand.lenght == 8:
-            self.modspell = self.modspell + 0.2
-        if wand.lenght == 9:
-            self.modspell = self.modspell + 0.1
-        if wand.lenght == 11:
-            self.modspell = self.modspell - 0.1
-        if wand.lenght == 12:
-            self.modspell = self.modspell - 0.2
-        if self.house == "Ravenclaw":
-            self.modspell = self.modspell - 0.2
-        if wand.core == "Chimera":
-            self.modspell = self.modspell - 0.2
-        return self.modspell
-    def mod_magic(self,wand) :
-        self.modmagic = 0.5 + 0.1 * self.year
-        if self.house == "Ravenclaw":
-            self.modmagic = self.modmagic + 0.2
-        if wand.core == "Dragon":
-            self.modmagic = self.modmagic + 0.2
-        if wand.lenght == 8:
-            self.modmagic = self.modmagic + 0.2
-        if wand.lenght == 9:
-            self.modmagic = self.modmagic + 0.1
-        if wand.lenght == 11:
-            self.modmagic = self.modmagic - 0.1
-        if wand.lenght == 12:
-            self.modmagic = self.modmagic - 0.2
-        if wand.core == "Unicorn":
-            self.modmagic = self.modmagic - 0.2
-        if self.house == "Hufflepuff":
-            self.modmagic = self.modmagic - 0.2
+        self.tab_1=[]
+        self.tab_2=[]
 
-        return self.modmagic
-    '''
+    def create_tabs(self,wand):
+        self.tab_1=["Gracz: " + self.name,
+                  "Dom: " + self.house,
+                  "Zycie: " + str(self.health) + "/" + str(self.maxh),
+                  "Magia: " + str(self.magic) + "/" + str(self.maxm),
+                  "Dlugość różdżki: " + str(wand.lenght) + " cali.",
+                  "Rdzeń różdżki: " + wand.core]
+
+    def create_tabs2(self,spell,potion):
+        self.tab_2=["Zaklecie: " + str(spell.name),
+                    "Koszt: " + str(spell.cost),
+                    "Obrazenia: " + str(int(self.modspell * spell.dmg)),
+                    "Leczenie: " + str(int(self.modspell * spell.heal)),
+                    "Efekt zaklecia: " + spell.efect]
+
+        self.tab_3=["Eliksir: " + str(potion.name),
+                    "Ilość: " + str(self.potion_number[self.potions_ind]),
+                    "Obrazenia: " + str(int(self.modpotion * potion.dmg)),
+                    "Leczenie: " + str(int(self.modpotion * potion.heal)),
+                    "Efekt eliksiru: " + potion.efect]
+
 
     def imgs(self):
         img=""
