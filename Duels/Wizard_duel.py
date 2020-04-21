@@ -616,8 +616,8 @@ def game():
         player_2.potion_number.append(potions[x].number + int(player_2.year / 2))
     image = pg.image.load(player_1.imgs())
     image2 = pg.image.load(player_2.imgs())
-    image3 = load_svg("scroll-152864.svg",1.5)
-    image4 = load_svg("scrolls-34607.svg",0.8)
+    image3 = load_svg("scroll-152864.svg",1.55)
+    image4 = load_svg("scrolls-34607.svg",0.8,(400,600))
     flame_imgs=["Flame_A.png","Flame_B.png","Flame_C.png","Flame_D.png","Flame_E.png","Flame_F.png","Flame_G.png","Flame_H.png"]
     animations_count = 0
 
@@ -644,8 +644,10 @@ def game():
         if  x.health <=0 and y.health <= 0:
             resoult()
         
-        map.blit(image3,(-250,-150))
-        map.blit(image4,(0,300))
+        map.blit(image3,(-260,-160))
+        map.blit(image3,(480,-160))
+        if turn % 5 > 0 :
+            map.blit(image4,(0,300))
 
         text_surf, text_rect = text(str("Tura gracza: " + x.name),mfont,WHITE)
         text_rect.center = (500,50)
@@ -661,7 +663,8 @@ def game():
         text_surf, text_rect = text(str(phase[turn % 5]),mfont,WHITE)
         text_rect.center = (500,80)
         map.blit(text_surf, text_rect)
-
+        #if turn % 5 > 1 :
+         #   button("powrót",200,450,50,50,RED)
         if turn % 5 == 1:
             button("W górę",30,330,200,50,ORANGE,phase_1,[x,x_wand,-1])
             button("Zostań w miejscu",30,380,200,50,ORANGE, phase_1,[x,x_wand,0])

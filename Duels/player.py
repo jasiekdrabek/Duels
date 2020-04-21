@@ -28,7 +28,7 @@ class Player:
         self.tab_2=[]
 
     def create_tabs(self,wand):
-        self.tab_1=["Gracz: " + self.name,
+        self.tab_1=[self.name,
                   "Dom: " + self.house,
                   "Zycie: " + str(self.health) + "/" + str(self.maxh),
                   "Magia: " + str(self.magic) + "/" + str(self.maxm),
