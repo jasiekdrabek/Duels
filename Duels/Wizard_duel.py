@@ -133,9 +133,9 @@ def how(x):
         button("elisiry",900,300,100,100,RED,how3)
         button("menu",900,400,100,100,RED,menu)
         if x == "how.jpg":
-            button("dalej",450,550,100,50,BLUE,how,["how2.jpg"])
+            button("dalej",450,550,100,50,BLUE,how,["images/how2.jpg"])
         else:
-            button("powrot",450,0,100,50,BLUE,how,["how.jpg"])
+            button("powrot",450,0,100,50,BLUE,how,["images/how.jpg"])
         pd.flip()
         for e in pg.event.get():
             if e.type==pg.QUIT:
@@ -153,7 +153,7 @@ def how2():
     while True:
         
         map.fill((255,255,255))
-        button("podstawy",900,100,100,100,RED,how,["how.jpg"])
+        button("podstawy",900,100,100,100,RED,how,["images/how.jpg"])
         button("zaklecia",900,200,100,100,YELLOW)
         button("elisiry",900,300,100,100,RED,how3)
         button("menu",900,400,100,100,RED,menu)
@@ -190,7 +190,7 @@ def how3():
     while True:
    
         map.fill((255,255,255))
-        button("podstawy",900,100,100,100,RED,how,["how.jpg"])
+        button("podstawy",900,100,100,100,RED,how,["images/how.jpg"])
         button("zaklecia",900,200,100,100,RED,how2)
         button("elisiry",900,300,100,100,YELLOW)
         button("menu",900,400,100,100,RED,menu)
@@ -232,7 +232,7 @@ def main():
 def menu():
     spells[8].cost = 140
     spells[8].dmg = 144
-    obraz=pg.image.load("file.jpg")
+    obraz=pg.image.load("images/file.jpg")
 
     while True:
         for e in pg.event.get():
@@ -252,7 +252,7 @@ def menu():
         map.blit(obraz,(0,0))
 
         button("Graj", 400, 300, 200, 100, GREEN, preparation)
-        button("Jak grac", 400, 400, 200, 100, YELLOW, how,["how.jpg"])
+        button("Jak grac", 400, 400, 200, 100, YELLOW, how,["images/how.jpg"])
         button("wyjscie", 400, 500, 200, 100,RED , exit)
         
         pd.update()
@@ -277,7 +277,7 @@ def write(player):
     player.index = 0
     o=1
     while o:
-        obraz = pg.image.load("file.jpg")
+        obraz = pg.image.load("images/file.jpg")
         map.blit(obraz,(0,0))
         text_surf, text_rect = text("Wpisz nazwe gracza:", lfont,WHITE)
         text_rect.center = (500,50)
@@ -320,7 +320,7 @@ def choose(p,player,list1,list2,list3=None):
     o=1
     while o :
         x= 100 * (9- len(list1))/2 + 50
-        obraz = pg.image.load("file.jpg")
+        obraz = pg.image.load("images/file.jpg")
         map.blit(obraz,(0,0))
         text_surf, text_rect = text(str(p.name), lfont,WHITE)
         text_rect.center = (500,50)
@@ -394,11 +394,11 @@ def phase_1(x,x_wand,i):
             x_wand.pos[0] = min(max(x.pos[0] + i,0),3)
             x_wand.pos[3] = x_wand.pos[0] * 100 + 100
             x.pos[0] = min(max(x.pos[0] + i,0),3)
-            x.pos[3] = min(max(100,x.pos[2] + i * 100),400)
+            x.pos[3] = x.pos[2] - min(max(100,x.pos[2] + i * 100),400)
     else:
         x.move = 1
     if turn == 1:
-        turn = 5
+        turn = 6
     else:
         turn = turn + 1
 
@@ -593,40 +593,54 @@ def game():
     turn = 0 
     attack = 1
     attack2 = 0 
-    x_x = 270
-    x_y = 200
+    x_x = 290
+    x_y = 220
     wx_x = x_x + 98
     y_x = 630
-    y_y = 200
+    y_y = 220
     wy_x = y_x - 60
     player_1.pos[1] = x_x
     player_1.pos[2] = x_y
-    player_1.pos[3] = x_y
+    player_1.pos[3] = 0
     player_2.pos[1] = y_x
     player_2.pos[2] = y_y
-    player_2.pos[3] = y_y
+    player_2.pos[3] = 0
     spells_indx = 0
     spells_indy = 0
     potions_indx = 0
     potions_indy = 0
-    wand_p1 = pg.image.load("wand.png")
-    wand_p2 = pg.image.load("wand1.png")
+    wand_p1 = pg.image.load("images/wand.png")
+    wand_p2 = pg.image.load("images/wand1.png")
+    board = pg.image.load("images/board.png")
     for x in range(len(potions)):
         player_1.potion_number.append(potions[x].number + int(player_1.year / 2))
         player_2.potion_number.append(potions[x].number + int(player_2.year / 2))
     image = pg.image.load(player_1.imgs())
     image2 = pg.image.load(player_2.imgs())
-    image3 = load_svg("scroll-152864.svg",1.55)
-    image4 = load_svg("scrolls-34607.svg",0.8,(400,600))
-    flame_imgs=["Flame_A.png","Flame_B.png","Flame_C.png","Flame_D.png","Flame_E.png","Flame_F.png","Flame_G.png","Flame_H.png"]
+    image3 = load_svg("images/scroll-152864.svg",1.55)
+    image4 = load_svg("images/scrolls-34607.svg",0.8,(400,600))
+    flame_imgs=["images/Flame_A.png",
+                "images/Flame_B.png",
+                "images/Flame_C.png",
+                "images/Flame_D.png",
+                "images/Flame_E.png",
+                "images/Flame_F.png",
+                "images/Flame_G.png",
+                "images/Flame_H.png"]
+    shield_imgs=[]
+    for i in range(1,33):
+        shield_imgs.append("images/shield_" + str(i) + ".png")
     animations_count = 0
+    animations_count2 = 0
 
     while 1:
 
-        #image3 = pg.image.load("file.jpg")
+        
         map.fill(BLACK)
+        #map.blit(board,(270,100))
+        #map.blit(board,(610,100))
 
-        if (turn % 10 < 5) :
+        if (turn % 12 < 6) :
             x = player_1
             x_wand = wand_1
             y = player_2
@@ -646,7 +660,7 @@ def game():
         
         map.blit(image3,(-260,-160))
         map.blit(image3,(480,-160))
-        if turn % 5 > 0 :
+        if turn % 6 > 0  and turn % 6<5:
             map.blit(image4,(0,300))
 
         text_surf, text_rect = text(str("Tura gracza: " + x.name),mfont,WHITE)
@@ -657,27 +671,28 @@ def game():
                "Faza 1: ruch",
                "Faza 2: wybor akcji",
                "Faza 2: wybor akcji",
-               "Faza 3: wybor celu akcji"
+               "Faza 3: wybor celu akcji",
+               ""
                ]
         
-        text_surf, text_rect = text(str(phase[turn % 5]),mfont,WHITE)
+        text_surf, text_rect = text(str(phase[turn % 6]),mfont,WHITE)
         text_rect.center = (500,80)
         map.blit(text_surf, text_rect)
         #if turn % 5 > 1 :
          #   button("powrót",200,450,50,50,RED)
-        if turn % 5 == 1:
+        if turn % 6 == 1:
             button("W górę",30,330,200,50,ORANGE,phase_1,[x,x_wand,-1])
             button("Zostań w miejscu",30,380,200,50,ORANGE, phase_1,[x,x_wand,0])
             button("W dół",30,430,200,50,ORANGE,phase_1,[x,x_wand,1])
 
-        if turn % 5 == 2:
+        if turn % 6 == 2:
             button("Zaklęcie",30,330,200,50,ORANGE,choose_action,["Zaklęcie"])
             button("Eliksir",30,430,200,50,ORANGE,choose_action,["Eliksir"])
-        if turn % 5 == 3:
+        if turn % 6 == 3:
             button("P",20,380,50,50,ORANGE,phase_2_3,[x,-1])
             button("D",220,380,50,50,ORANGE,phase_2_3,[x,1])
             button("Zatwierdź",30,430,200,50,ORANGE,phase_2,[x,spells,x_wand])
-        if turn % 5 == 4:
+        if turn % 6 == 4:
             if (spells[x.spells_ind].dmg != 0 and choosed_action == "Zaklęcie") or (potions[x.potions_ind].dmg != 0 and choosed_action == "Eliksir"):
                 button("1",20,380,50,50,ORANGE,phase_3_1,[x,0])
                 button("2",90,380,50,50,ORANGE,phase_3_1,[x,1])
@@ -696,31 +711,49 @@ def game():
                     j = x
                     l = y
                 flame_img = pg.image.load(flame_imgs[animations_count % len(flame_imgs)])
-                #if i == j.next[4] :
-                  #  button("",l.pos[1],i*100+100,100,100,ORANGE)
                 if i == j.next[0] or i == j.next[1]:
                     for k in range (5):
                         map.blit(flame_img,(j.pos[1] + 20 * k - 40,i*100 +100))
                 elif i == j.next[2] or i == j.next[3]:
                     button("",j.pos[1] - 25,i*100+ 100,150,100,GREEN)
                 else:
-                    button("",j.pos[1],i*100+ 100,100,100,WHITE)
+                    button("",j.pos[1],i*100 +100,100,100,WHITE)
+                
                 if i == j.next[4] :
                     button("",l.pos[1],i*100+100,100,100,ORANGE)
+        
+        
+        if x.shield ==1:
+            shield_img = pg.image.load(shield_imgs[animations_count2 % len(shield_imgs)])
+            map.blit(shield_img,(x.pos[1],x.pos[2] -15))
+        if y.shield ==1:
+            shield_img = pg.image.load(shield_imgs[animations_count2 % len(shield_imgs)])
+            map.blit(shield_img,(y.pos[1],y.pos[2] -15))
+        if turn % 6 ==5:
+            animations_count2 = animations_count2 + 1
+            shift =(y.pos[3] )/31
+            #shift_x=(x.pos[1] - y.pos[1])/31
+            #shift_y=(x.pos[2] - y.pos[2])/31
+            #pg.draw.line(map,RED,[x.pos[1] - shift_x * animations_count2,x.pos[2] - shift_y * animations_count2],
+             #            [x.pos[1] - shift_x * animations_count2 +20,x.pos[2] - shift_y * animations_count2 +20],3)
+            y.pos[2] = max(min(y.pos[2] -shift,420),120)
+            y_wand.pos[2] =max(min(y_wand.pos[2] - shift,400),100)
+            if animations_count2 == 31:
+                turn = turn +1
+                animations_count2 =-1
         animations_count = animations_count + 1
+        #if turn % 10 == 1 :
+         #   player_1.pos[2] = player_1.pos[3]
+          #  wand_1.pos[2] = wand_1.pos[3]
 
-        if turn % 10 == 1 :
-            player_1.pos[2] = player_1.pos[3]
-            wand_1.pos[2] = wand_1.pos[3]
-
-        map.blit(image,(x_x,player_1.pos[2]))
+        map.blit(image,(x_x + 10,player_1.pos[2]))
         map.blit(wand_p1,(wx_x,wand_1.pos[2]))
         
-        if turn % 10 == 6 :
-            player_2.pos[2] = player_2.pos[3]
-            wand_2.pos[2] = wand_2.pos[3]
+        #if turn % 10 == 6 :
+         #   player_2.pos[2] = player_2.pos[3]
+          #  wand_2.pos[2] = wand_2.pos[3]
 
-        map.blit(image2,(y_x,player_2.pos[2]))
+        map.blit(image2,(y_x + 10 ,player_2.pos[2]))
         map.blit(wand_p2,(wy_x,wand_2.pos[2]))
         
         for i in range (2):
@@ -738,7 +771,7 @@ def game():
                 text_surf, text_rect = text(i.tab_1[n],sfont,WHITE)
                 text_rect.center = (l,110 + 20 * n)
                 map.blit(text_surf, text_rect)
-        if turn % 5 == 3:
+        if turn % 6 == 3:
             x.create_tabs2(spells[x.spells_ind],potions[x.potions_ind])    
             temp_tab = []
             if choosed_action == "Zaklęcie":
@@ -750,8 +783,12 @@ def game():
                 text_rect.center = (130,350 + 20 * n)
                 map.blit(text_surf, text_rect)
 
-        if turn % 5 == 0:
-            text_surf, text_rect = text(str("tura gracza: " + x.name),lfont,BLUE)
+        if turn % 12 == 0:
+            text_surf, text_rect = text(str("tura gracza: " + player_1.name),lfont,BLUE)
+            text_rect.center = (500,300)
+            map.blit(text_surf, text_rect)
+        if turn % 12 ==6:
+            text_surf, text_rect = text(str("tura gracza: " + player_2.name),lfont,BLUE)
             text_rect.center = (500,300)
             map.blit(text_surf, text_rect)
 
@@ -769,11 +806,17 @@ def game():
                 sys.exit(0)
             
             if e.type == KEYDOWN:
-                if turn % 5 == 0:
+                if turn % 6 == 0 :
                     if e.key == K_RETURN:
-                        turn = turn + 1
+                        turn =turn +1
+                #if turn % 6 ==5:
+                 #   if e.key == K_RETURN:
+                  #      x.pos[2] = max(min(x.pos[2] -shift,400),120)
+                   #     x_wand.pos[2] =max(min(x_wand.pos[2] - shift,400),100)
+                    #    animations_count2 = -1
+                     #   turn = turn + 1
 
-                if turn % 5 == 1 :
+                if turn % 6 == 1 :
                     if e.key == K_RIGHT or e.key == K_LEFT:
                         phase_1(x,x_wand,0)
                     if e.key == K_UP:
@@ -781,7 +824,7 @@ def game():
                     if e.key == K_DOWN:
                         phase_1(x,x_wand,1)
 
-                if turn % 5 == 3:
+                if turn % 6 == 3:
                     if e.key == K_q:
                         phase_2(x,spells,x_wand)                        
                     if e.key == K_w:
@@ -789,7 +832,7 @@ def game():
                     if e.key == K_e:
                         phase_2_3(x,1)
    
-                if turn % 5 == 4:
+                if turn % 6 == 4:
 
                     if e.key == K_1:
                         phase_3_1(x,0)

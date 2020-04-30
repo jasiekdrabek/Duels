@@ -52,13 +52,13 @@ class Player:
     def imgs(self):
         img=""
         if self.house== "Gryffindor":
-            img="1.png"
+            img="images/1.png"
         elif self.house == "Slytherin":
-            img="2.png"
+            img="images/2.png"
         elif self.house == "Ravenclaw":
-            img="3.png"
+            img="images/3.png"
         elif self.house== "Hufflepuff":
-            img="4.png"
+            img="images/4.png"
             
         return img
     def change(self,wand):
