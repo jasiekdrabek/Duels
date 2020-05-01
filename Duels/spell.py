@@ -5,5 +5,5 @@ class Spell:
         self.heal=heal
         self.cost=cost
         self.efect = efect
-        self.last = ""
+        
         

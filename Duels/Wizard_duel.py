@@ -392,7 +392,7 @@ def phase_1(x,x_wand,i):
     if x.move == 1:
         if x.pos[0] == x_wand.pos[0]:
             x_wand.pos[0] = min(max(x.pos[0] + i,0),3)
-            x_wand.pos[3] = x_wand.pos[0] * 100 + 100
+            
             x.pos[0] = min(max(x.pos[0] + i,0),3)
             x.pos[3] = x.pos[2] - min(max(100,x.pos[2] + i * 100),400)
     else:
@@ -444,6 +444,7 @@ def phase_3(x,y,spells,potions,x_wand,y_wand):
 def phase_3_1(x,i):
     global attack2
     x.next[4]=i
+    x.pos[4]=i *100 +120
     attack2 = 1
 
 def action(player1,player2,spell,x,wand1,wand2):
@@ -456,7 +457,8 @@ def action(player1,player2,spell,x,wand1,wand2):
                 player2.health = player2.health - int(spell.dmg * player1.modspell)
                 
                 if spell.name == "Expeliarmus" :
-                    wand2.pos[0] = random.randint(0,3)
+                    temp =[wand2.pos[0]-1,wand2.pos[0]+1]
+                    wand2.pos[0] = random.choice(temp)
                     wand2.pos[3] = wand2.pos[0]*100+100
                 if spell.name == "Petrificus Totalus":
                     player2.move = 0
@@ -475,7 +477,7 @@ def action(player1,player2,spell,x,wand1,wand2):
     if spell.name == "Episkey" :
         player1.health = min(player1.health+ int(spell.heal * player1.modspell),player1.maxh)
 
-    if spell.last == "Protego":
+    if player1.lastspell == "Protego":
             player1.modspell = player1.modspell - 1
 
     if player2.shield == 1:
@@ -484,13 +486,14 @@ def action(player1,player2,spell,x,wand1,wand2):
     if spell.name == "Protego" :
         player1.shield = 1
         player1.modspell = 1 + player1.modspell
-        spell.last = spell.name
+        
 
     if spell.name == "Incendo":
         player2.next[0] = x
         templist = [0,1,2,3]
         templist.remove(x)
         player2.next[1] = random.choice(templist)
+    player1.lastspell = spell.name
 
 
 def action2(player1,player2,potion,potionind,x):
@@ -619,19 +622,20 @@ def game():
     image2 = pg.image.load(player_2.imgs())
     image3 = load_svg("images/scroll-152864.svg",1.55)
     image4 = load_svg("images/scrolls-34607.svg",0.8,(400,600))
-    flame_imgs=["images/Flame_A.png",
-                "images/Flame_B.png",
-                "images/Flame_C.png",
-                "images/Flame_D.png",
-                "images/Flame_E.png",
-                "images/Flame_F.png",
-                "images/Flame_G.png",
-                "images/Flame_H.png"]
+    flame_imgs=[]
+    for i in range(1,9):
+        flame_imgs.append("images/Flame_"+str(i)+".png")
     shield_imgs=[]
     for i in range(1,33):
         shield_imgs.append("images/shield_" + str(i) + ".png")
     animations_count = 0
     animations_count2 = 0
+    phase=["",
+           "Faza 1: ruch",
+           "Faza 2: wybor akcji",
+           "Faza 2: wybor akcji",
+           "Faza 3: wybor celu akcji",
+           ""]
 
     while 1:
 
@@ -665,16 +669,7 @@ def game():
 
         text_surf, text_rect = text(str("Tura gracza: " + x.name),mfont,WHITE)
         text_rect.center = (500,50)
-        map.blit(text_surf, text_rect)
-      
-        phase=["",
-               "Faza 1: ruch",
-               "Faza 2: wybor akcji",
-               "Faza 2: wybor akcji",
-               "Faza 3: wybor celu akcji",
-               ""
-               ]
-        
+        map.blit(text_surf, text_rect)       
         text_surf, text_rect = text(str(phase[turn % 6]),mfont,WHITE)
         text_rect.center = (500,80)
         map.blit(text_surf, text_rect)
@@ -711,50 +706,59 @@ def game():
                     j = x
                     l = y
                 flame_img = pg.image.load(flame_imgs[animations_count % len(flame_imgs)])
-                if i == j.next[0] or i == j.next[1]:
-                    for k in range (5):
-                        map.blit(flame_img,(j.pos[1] + 20 * k - 40,i*100 +100))
-                elif i == j.next[2] or i == j.next[3]:
-                    button("",j.pos[1] - 25,i*100+ 100,150,100,GREEN)
-                else:
-                    button("",j.pos[1],i*100 +100,100,100,WHITE)
+                button("",j.pos[1],i*100 +100,100,100,WHITE)
+                if turn % 6 != 5:
+                    if i == j.next[0] or i == j.next[1]:
+                        for k in range (5):
+                            map.blit(flame_img,(j.pos[1] + 20 * k - 40,i*100 +100))
+                    elif i == j.next[2] or i == j.next[3]:
+                        button("",j.pos[1] - 25,i*100+ 100,150,100,GREEN)
+                #else:
+                 #   button("",j.pos[1],i*100 +100,100,100,WHITE)
                 
                 if i == j.next[4] :
                     button("",l.pos[1],i*100+100,100,100,ORANGE)
         
         
-        if x.shield ==1:
+        if x.shield ==1 :
             shield_img = pg.image.load(shield_imgs[animations_count2 % len(shield_imgs)])
             map.blit(shield_img,(x.pos[1],x.pos[2] -15))
         if y.shield ==1:
             shield_img = pg.image.load(shield_imgs[animations_count2 % len(shield_imgs)])
             map.blit(shield_img,(y.pos[1],y.pos[2] -15))
+        if x.shield == 0 and x.lastspell == "Protego":
+            shield_img = pg.image.load(shield_imgs[-1])
+            map.blit(shield_img,(x.pos[1],x.pos[2] -15))
+        if y.shield == 0 and y.lastspell == "Protego":
+            shield_img = pg.image.load(shield_imgs[-1])
+            map.blit(shield_img,(y.pos[1],y.pos[2] -15))
         if turn % 6 ==5:
-            animations_count2 = animations_count2 + 1
-            shift =(y.pos[3] )/31
-            #shift_x=(x.pos[1] - y.pos[1])/31
-            #shift_y=(x.pos[2] - y.pos[2])/31
-            #pg.draw.line(map,RED,[x.pos[1] - shift_x * animations_count2,x.pos[2] - shift_y * animations_count2],
-             #            [x.pos[1] - shift_x * animations_count2 +20,x.pos[2] - shift_y * animations_count2 +20],3)
+            #to do
+            shift =(y.pos[3] )/32
+            shift_x=(x.pos[1] - y.pos[1] )/32
+            shift_y=(x.pos[2] - x.pos[4])/32
+            if (choosed_action == "Zaklęcie" and x.spells_ind !=0 and x.spells_ind !=6 and x.spells_ind !=7) or (choosed_action == "Eliksir" and x.potions_ind != 1 and x.potions_ind != 3):
+                pg.draw.line(map,RED,[x.pos[1] - shift_x * animations_count2,x.pos[2] - shift_y * animations_count2],
+                         [x.pos[1] - shift_x * animations_count2 +20,x.pos[2] - shift_y * animations_count2 +20],3)
             y.pos[2] = max(min(y.pos[2] -shift,420),120)
             y_wand.pos[2] =max(min(y_wand.pos[2] - shift,400),100)
+
             if animations_count2 == 31:
                 turn = turn +1
-                animations_count2 =-1
+                animations_count2 =-2
+            animations_count2 = animations_count2 + 1
         animations_count = animations_count + 1
-        #if turn % 10 == 1 :
-         #   player_1.pos[2] = player_1.pos[3]
-          #  wand_1.pos[2] = wand_1.pos[3]
+        if turn % 12 == 0 and player_2.lastspell =="Expeliarmus":
+            wand_1.pos[2] = wand_1.pos[3]
 
         map.blit(image,(x_x + 10,player_1.pos[2]))
         map.blit(wand_p1,(wx_x,wand_1.pos[2]))
         
-        #if turn % 10 == 6 :
-         #   player_2.pos[2] = player_2.pos[3]
-          #  wand_2.pos[2] = wand_2.pos[3]
+        if turn % 12 == 6 and player_1.lastspell == "Expeliarmus":
+            wand_2.pos[2] = wand_2.pos[3]
 
         map.blit(image2,(y_x + 10 ,player_2.pos[2]))
-        map.blit(wand_p2,(wy_x,wand_2.pos[2]))
+        map.blit(wand_p2,(wy_x,wand_2.pos[2] ))
         
         for i in range (2):
             if i == 1:

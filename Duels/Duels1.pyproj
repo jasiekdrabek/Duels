@@ -19,15 +19,6 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="1.jpg" />
-    <Content Include="2.jpg" />
-    <Content Include="3.jpg" />
-    <Content Include="4.jpg" />
-    <Content Include="file.jpg" />
-    <Content Include="h.jpg" />
-    <Content Include="pobrane.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="potion.py">
       <SubType>Code</SubType>
     </Compile>

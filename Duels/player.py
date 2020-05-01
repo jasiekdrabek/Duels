@@ -6,6 +6,7 @@ class Player:
     def __init__(self,name,year,house):
         self.name=name
         self.index = 0
+        self.lastspell =""
         self.spells_ind = 0 
         self.potions_ind = 0 
         self.year=year
@@ -17,7 +18,7 @@ class Player:
         self.modspell=self.mods[2]
         self.modmagic=self.mods[3]
         self.shield=0
-        self.pos=[1,0,0,0] # [0-3,x,y,next_y]
+        self.pos=[1,0,0,0,0] # [0-3,x,y,next_y]
         self.maxh=year*10
         self.next=[4,4,4,4]
         self.move=1
@@ -26,6 +27,7 @@ class Player:
         self.potion_number=[]
         self.tab_1=[]
         self.tab_2=[]
+        self.tab_3=[]
 
     def create_tabs(self,wand):
         self.tab_1=[self.name,
