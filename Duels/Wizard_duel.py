@@ -43,10 +43,10 @@ PURPLE = (147,112,219)
 YELLOW = (255,255,0)
 ORANGE = (255,165,0)
 map = pd.set_mode((size + 400, size))
-font = pg.font.SysFont("Comic Sans MS", 18)
-sfont = pg.font.SysFont("Comic Sans MS", 12)
-lfont = pg.font.SysFont("Comic Sans MS", 70)
-mfont = pg.font.SysFont("Comic Sans MS", 30)
+font = pg.font.SysFont("Times New Roman", 18)
+sfont = pg.font.SysFont("Times New Roman", 12)
+lfont = pg.font.SysFont("Times New Roman", 70)
+mfont = pg.font.SysFont("Times New Roman", 30)
 
 def text(text, font, color = BLACK):
     text_surface = font.render(text, True, color)
@@ -61,7 +61,8 @@ def button(msg, x, y, width, height, color, action = None,args = None):
     mouse = pg.mouse.get_pos() 
     click = pg.mouse.get_pressed()
     pg.draw.rect(map, color, (x, y, width, height))
-
+    #map.blit(pg.image.load("images/button.png"),(x,y))
+    
 
     if (x < mouse[0] < (x + width)) and (y < mouse[1] < (y + height)):
         if (click[0] == 1):
@@ -75,7 +76,8 @@ def button(msg, x, y, width, height, color, action = None,args = None):
                     action()
     
     text_surf, text_rect = text(msg, font)
-    text_rect.center = (x + width_half, y + height_half)
+    text_rect.center = (x +  width_half , y + height_half )
+    #text_rect.center = (x +  75 , y + 25 )
     map.blit(text_surf, text_rect)
 
 def load_svg(filename, scale=None, size=None, clip_from=None, fit_to=None):
@@ -132,7 +134,7 @@ def how(x):
         button("zaklecia",900,200,100,100,RED,how2)
         button("elisiry",900,300,100,100,RED,how3)
         button("menu",900,400,100,100,RED,menu)
-        if x == "how.jpg":
+        if x == "images/how.jpg":
             button("dalej",450,550,100,50,BLUE,how,["images/how2.jpg"])
         else:
             button("powrot",450,0,100,50,BLUE,how,["images/how.jpg"])
@@ -393,8 +395,8 @@ def phase_1(x,x_wand,i):
         if x.pos[0] == x_wand.pos[0]:
             x_wand.pos[0] = min(max(x.pos[0] + i,0),3)
             
-            x.pos[0] = min(max(x.pos[0] + i,0),3)
-            x.pos[3] = x.pos[2] - min(max(100,x.pos[2] + i * 100),400)
+        x.pos[0] = min(max(x.pos[0] + i,0),3)
+        x.pos[3] = x.pos[2] - min(max(100,x.pos[2] + i * 100),400)
     else:
         x.move = 1
     if turn == 1:
@@ -615,19 +617,26 @@ def game():
     wand_p1 = pg.image.load("images/wand.png")
     wand_p2 = pg.image.load("images/wand1.png")
     board = pg.image.load("images/board.png")
+    board2 = pg.image.load("images/board.png")
     for x in range(len(potions)):
         player_1.potion_number.append(potions[x].number + int(player_1.year / 2))
         player_2.potion_number.append(potions[x].number + int(player_2.year / 2))
-    image = pg.image.load(player_1.imgs())
-    image2 = pg.image.load(player_2.imgs())
+    image = load_svg(player_1.imgs(),0.065)
+    image2 = load_svg(player_2.imgs(),0.065)
     image3 = load_svg("images/scroll-152864.svg",1.55)
-    image4 = load_svg("images/scrolls-34607.svg",0.8,(400,600))
+    image4 = load_svg("images/scrolls-34607.svg",0.8)
     flame_imgs=[]
     for i in range(1,9):
         flame_imgs.append("images/Flame_"+str(i)+".png")
     shield_imgs=[]
     for i in range(1,33):
         shield_imgs.append("images/shield_" + str(i) + ".png")
+    toxic_imgs =[]
+    for i in range(1,17):
+        toxic_imgs.append("images/Toxic_"+str(i)+".png")
+    spells_imgs =[]
+    for i in range(1,7):
+        spells_imgs.append("images/Spell_"+str(i)+".png")
     animations_count = 0
     animations_count2 = 0
     phase=["",
@@ -641,8 +650,9 @@ def game():
 
         
         map.fill(BLACK)
-        #map.blit(board,(270,100))
-        #map.blit(board,(610,100))
+        #obraz = pg.image.load("images/background.png")
+        #map.blit(obraz,(0,0))
+        
 
         if (turn % 12 < 6) :
             x = player_1
@@ -654,14 +664,15 @@ def game():
             x_wand = wand_2
             y = player_1
             y_wand = wand_1
-
-        if (x.health <= 0 and y.health > 0):
-            resoult(y)
-        if (y.health <= 0 and x.health > 0):
-            resoult(x)
-        if  x.health <=0 and y.health <= 0:
-            resoult()
-        
+        if turn % 6 ==0:
+            if (x.health <= 0 and y.health > 0):
+                resoult(y)
+            if (y.health <= 0 and x.health > 0):
+                resoult(x)
+            if  x.health <=0 and y.health <= 0:
+                resoult()
+        map.blit(board,(290,100))
+        map.blit(board2,(630,100))
         map.blit(image3,(-260,-160))
         map.blit(image3,(480,-160))
         if turn % 6 > 0  and turn % 6<5:
@@ -706,13 +717,14 @@ def game():
                     j = x
                     l = y
                 flame_img = pg.image.load(flame_imgs[animations_count % len(flame_imgs)])
-                button("",j.pos[1],i*100 +100,100,100,WHITE)
+                toxic_img = pg.image.load(toxic_imgs[animations_count % len(toxic_imgs)])
+                #button("",j.pos[1],i*100 +100,100,100,WHITE)
                 if turn % 6 != 5:
                     if i == j.next[0] or i == j.next[1]:
                         for k in range (5):
                             map.blit(flame_img,(j.pos[1] + 20 * k - 40,i*100 +100))
                     elif i == j.next[2] or i == j.next[3]:
-                        button("",j.pos[1] - 25,i*100+ 100,150,100,GREEN)
+                        map.blit(toxic_img,(j.pos[1],i *100 +100))
                 #else:
                  #   button("",j.pos[1],i*100 +100,100,100,WHITE)
                 
@@ -738,8 +750,8 @@ def game():
             shift_x=(x.pos[1] - y.pos[1] )/32
             shift_y=(x.pos[2] - x.pos[4])/32
             if (choosed_action == "Zaklęcie" and x.spells_ind !=0 and x.spells_ind !=6 and x.spells_ind !=7) or (choosed_action == "Eliksir" and x.potions_ind != 1 and x.potions_ind != 3):
-                pg.draw.line(map,RED,[x.pos[1] - shift_x * animations_count2,x.pos[2] - shift_y * animations_count2],
-                         [x.pos[1] - shift_x * animations_count2 +20,x.pos[2] - shift_y * animations_count2 +20],3)
+                spell_img = pg.image.load(spells_imgs[animations_count2 % len(spells_imgs)])
+                map.blit(spell_img,(x.pos[1] - shift_x * animations_count2,x.pos[2] - shift_y * animations_count2))
             y.pos[2] = max(min(y.pos[2] -shift,420),120)
             y_wand.pos[2] =max(min(y_wand.pos[2] - shift,400),100)
 
@@ -751,13 +763,13 @@ def game():
         if turn % 12 == 0 and player_2.lastspell =="Expeliarmus":
             wand_1.pos[2] = wand_1.pos[3]
 
-        map.blit(image,(x_x + 10,player_1.pos[2]))
+        map.blit(image,(x_x + 30,player_1.pos[2]))
         map.blit(wand_p1,(wx_x,wand_1.pos[2]))
         
         if turn % 12 == 6 and player_1.lastspell == "Expeliarmus":
             wand_2.pos[2] = wand_2.pos[3]
 
-        map.blit(image2,(y_x + 10 ,player_2.pos[2]))
+        map.blit(image2,(y_x + 30 ,player_2.pos[2]))
         map.blit(wand_p2,(wy_x,wand_2.pos[2] ))
         
         for i in range (2):
