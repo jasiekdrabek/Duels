@@ -1,9 +1,16 @@
+
 from wand import Wand
 from spell import Spell
 from potion import Potion
 
 class Player:
+    """
+    class where all information about player are stored.
+    """
     def __init__(self,name,year,house):
+        """
+        set name, year and house other set atributes are related to them. 
+        """
         self.name=name
         self.index = 0
         self.lastspell =""
@@ -30,6 +37,9 @@ class Player:
         self.tab_3=[]
 
     def create_tabs(self,wand):
+        """
+        crate tab with information about player so it can be on display.
+        """
         self.tab_1=[self.name,
                   "Dom: " + self.house,
                   "Zycie: " + str(self.health) + "/" + str(self.maxh),
@@ -38,6 +48,9 @@ class Player:
                   "Rdzeń różdżki: " + wand.core]
 
     def create_tabs2(self,spell,potion):
+        """
+        create tab with information about spell/potion this player want to throw so it can be on display.
+        """
         self.tab_2=["Zaklecie: " + str(spell.name),
                     "Koszt: " + str(spell.cost),
                     "Obrazenia: " + str(int(self.modspell * spell.dmg)),
@@ -52,6 +65,9 @@ class Player:
 
 
     def imgs(self):
+        """
+        get image of player it depend on which house he chooosed.
+        """
         img=""
         if self.house== "Gryffindor":
             img="images/1.svg"
@@ -63,7 +79,11 @@ class Player:
             img="images/4.svg"
             
         return img
+    
     def change(self,wand):
+        """
+        change atribe to prepare for game.
+        """
         self.pos[0] = 1
         wand.pos[0] = 1
         wand.pos[2] = wand.pos[0]*100+100
@@ -101,6 +121,9 @@ class Player:
                 }
     
     def mod(self,wand):
+        """
+        set modifiers before game depends on self.house, self.mods.
+        """
         self.mods[0] = 0.5 + 0.1 * self.year
         self.mods[1] = 0.5 + 0.1 * self.year
         self.mods[2] = 0.5 + 0.1 * self.year

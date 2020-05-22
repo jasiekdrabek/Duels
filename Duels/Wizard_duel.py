@@ -49,12 +49,25 @@ lfont = pg.font.SysFont("Times New Roman", 70)
 mfont = pg.font.SysFont("Times New Roman", 30)
 
 def text(text, font, color = BLACK):
+    """
+    this function set font and color of text so it can be on display.
+    """
     text_surface = font.render(text, True, color)
     return text_surface, text_surface.get_rect()
 
     
 def button(msg, x, y, width, height, color, action = None,args = None):
-
+    
+    """this function creates button
+    
+    msg - text on button;
+    x,y - co-ordinates of button;
+    width and height - I think it's obvious;
+    color - backgroud color of button;
+    action - function that is call when you clik button;
+    args - tab of arguments of that function;
+    """
+    
     global press
     width_half = width / 2
     height_half = height / 2
@@ -81,12 +94,16 @@ def button(msg, x, y, width, height, color, action = None,args = None):
     map.blit(text_surf, text_rect)
 
 def load_svg(filename, scale=None, size=None, clip_from=None, fit_to=None):
-    """Returns Pygame Image object from rasterized SVG
+    
+    """I found this function when I need to load svg file.
+    
+    Returns Pygame Image object from rasterized SVG
     If scale (float) is provided and is not None, image will be scaled.
     If size (w, h tuple) is provided, the image will be clipped to specified size.
     If clip_from (x, y tuple) is provided, the image will be clipped from specified point.
     If fit_to (w, h tuple) is provided, image will be scaled to fit in specified rect.
     """
+
     svg = Parser.parse_file(filename)
     tx, ty = 0, 0
     if size is None:
@@ -111,22 +128,42 @@ def load_svg(filename, scale=None, size=None, clip_from=None, fit_to=None):
     return image
 
 def exit():
+    """
+    exit app
+    """
 
     pg.quit()
     sys.exit(0)
 
 
 def minus(x,y):
+    
+    """change index to previous one if first index was called index change to last one.
+    
+    x-index;
+    y-lenght of tab
+    """
     global index
     index = ((x-1) % len(y))
 
 
 def plus(x,y):
+    
+    """change index to next one if last index was called index change to first one.
+    
+    x-index;
+    y-lenght of tab
+    """
     global index
     index = ((x+1) % len(y))
 
 
 def how(x):
+     
+    """display how to plat basic rules.
+    
+    x - name of jgp file.
+    """
     while True:
         image = pg.image.load(x)
         map.blit(image,(0,0))
@@ -150,6 +187,9 @@ def how(x):
 
 
 def how2():
+    """
+    display basic information about spells.
+    """
     global index
     index = 0
     while True:
@@ -187,6 +227,9 @@ def how2():
         pd.update()
 
 def how3():
+    """
+    display basic inforation about potions.
+    """
     global index
     index = 0
     while True:
@@ -224,7 +267,9 @@ def how3():
         pd.update()
 
 def main():
-
+    """
+    main function start game.
+    """
     #pg.mixer.music.load("ghostin.mp3")
     #pg.mixer.music.play(-1)
     pd.set_caption("Wizard duels")
@@ -232,6 +277,9 @@ def main():
     
     
 def menu():
+    """
+    display menu
+    """
     spells[8].cost = 140
     spells[8].dmg = 144
     obraz=pg.image.load("images/file.jpg")
@@ -261,6 +309,12 @@ def menu():
         
 def burn(x,y):
     
+    """check if player get demage from bruning fire.
+    
+    x - player who might get demage;
+    y - player who throw burning spell
+    """
+    
     if x.pos[0] == x.next[0] or x.pos[0] == x.next[1]:
         x.health = x.health- int(20 * y.modspell)
 
@@ -268,6 +322,12 @@ def burn(x,y):
     x.next[1] = 4
 
 def toxic(x,y):
+    
+    """check if player get demage from toxins.
+    
+    x - player who might get demage;
+    y - player who throw toxic potion
+    """
 
     if x.pos[0] == x.next[2] or x.pos[0] == x.next[3]:
         x.health = x.health - int(10 * y.modpotion)
@@ -275,6 +335,11 @@ def toxic(x,y):
     x.next[3] = 4
 
 def write(player):
+    
+    """function where player write his name.
+    
+    player - object of class player 
+    """
     player.name = ""
     player.index = 0
     o=1
@@ -318,7 +383,15 @@ def write(player):
                     if player.index > 0:
                         player.index -= 1
 
-def choose(p,player,list1,list2,list3=None): 
+def choose(p,player,list1,list2,list3=None):
+    """function where player choose his atributes
+    
+    p - player;
+    player - atributte to change;
+    list1 - tab with options to choose;
+    list2 - tab with background color of options. last clicked is green others white; 
+    list3 - tab with how atritutes affects player's modifiers
+    """
     o=1
     while o :
         x= 100 * (9- len(list1))/2 + 50
@@ -372,11 +445,22 @@ def choose(p,player,list1,list2,list3=None):
         pd.update()
 
 def ready(p,lista2 = None):
+    """
+    change background color so button can be clicked
+    """
     if p[0] != RED:
             p[0] = WHITE
 
 
 def set(player,list1,list2,ind):
+    
+    """this function set players atributes
+    
+    player - atribute to change;
+    list1 - tab with options to choose;
+    list2 - tab with background color of options. last clicked is green others white;
+    ind - choosed index
+    """
     if  len(list2) > ind:
         for x in range (len(list2)):
             list2[x] = WHITE
@@ -385,18 +469,28 @@ def set(player,list1,list2,ind):
         return player
 
 def choose_action(action):
+    """
+    this function set choosed action ("Zaklęcie" lub "Eliksir")
+    """
     global choosed_action, turn 
     turn = turn + 1
     choosed_action = action
 
 def phase_1(x,x_wand,i):
+
+    """this function shows where player move in this turn(up,down,stay in the same position)
+    
+    x - player who has turn;
+    x_wand - his wand;
+    i - change of position (-1: up, 0:stay, 1:down)
+    """
     global turn
     if x.move == 1:
         if x.pos[0] == x_wand.pos[0]:
             x_wand.pos[0] = min(max(x.pos[0] + i,0),3)
             
         x.pos[0] = min(max(x.pos[0] + i,0),3)
-        x.pos[3] = x.pos[2] - min(max(100,x.pos[2] + i * 100),400)
+        x.pos[3] = x.pos[2] - min(max(120,x.pos[2] + i * 100),420)
     else:
         x.move = 1
     if turn == 1:
@@ -405,6 +499,13 @@ def phase_1(x,x_wand,i):
         turn = turn + 1
 
 def phase_2(x,spels,x_wand):
+    
+    """check if player can throw spell/potion if he can then next phase begins
+    
+    x - player who has turn;
+    spels - tab with Spells;
+    x_wand - player's wand
+    """
     global choosed_action,turn,attack
     if choosed_action == "Zaklęcie":
         if (x.magic >= spells[x.spells_ind].cost and x.pos[0] == x_wand.pos[0]) or spells[x.spells_ind].name == "Brak":
@@ -417,10 +518,28 @@ def phase_2(x,spels,x_wand):
 
 
 def phase_2_1(x,i):
+    
+    """change spells index
+    
+    x -player who has turn;
+    i - change(-1:previous,1:next)
+    """
     x.spells_ind = (x.spells_ind + i)%(x.year + 2)
 def phase_2_2(x,i):
+    
+    """change potions index
+    
+    x -player who has turn;
+    i - change(-1:previous,1:next)
+    """
     x.potions_ind = (x.potions_ind + i)% int((x.year + 1)/2)
 def phase_2_3(x,i):
+    
+    """this function check what action was chossen by player
+    
+    x -player who has turn;
+    i - choosed action
+    """
     global choosed_action
     if choosed_action == "Zaklęcie":
         phase_2_1(x,i)
@@ -428,6 +547,16 @@ def phase_2_3(x,i):
         phase_2_2(x,i)
 
 def phase_3(x,y,spells,potions,x_wand,y_wand):
+    
+    """this function perform action that player choosed
+    
+    x - player who has turn;
+    x_wand - his wand;
+    y - other player;
+    y_wand - his wand;
+    spells -  tab with spells;
+    potions - tab with potions
+    """
     global attack2,turn,choosed_action
     if spells[x.spells_ind].dmg == 0 and choosed_action == "Zaklęcie":
         attack2 = 1
@@ -444,13 +573,26 @@ def phase_3(x,y,spells,potions,x_wand,y_wand):
         attack2 = 0
         x.next[4] = 4
 def phase_3_1(x,i):
+    """this function set field where spell/potion will be throw
+    
+    x -player who has turn;
+    i - choosed field
+    """
     global attack2
     x.next[4]=i
     x.pos[4]=i *100 +120
     attack2 = 1
 
 def action(player1,player2,spell,x,wand1,wand2):
-
+    """determniate resoult of spell that player perform
+    
+    player1 - player who has turn;
+    wand1 - his wand;
+    player2 - other player;
+    wand2 - his wand;
+    spell -  choosed spell;
+    x - field where splell will be trow
+    """
     player1.magic = min(player1.magic-spell.cost+10,player1.maxm)
     
     if spell.name != "Protego" and spell.name != "Episkey" and spell.name != "Avada Kedavra":    
@@ -499,7 +641,17 @@ def action(player1,player2,spell,x,wand1,wand2):
 
 
 def action2(player1,player2,potion,potionind,x):
-
+    
+    """determniate resoult of spell that player perform
+    
+    player1 - player who has turn;
+    wand1 - his wand;
+    player2 - other player;
+    wand2 - his wand;
+    potion -  choosed potion;
+    potionind - index of choosed potion;
+    x - field where potion will be trow
+    """
     player1.potion_number[potionind] = player1.potion_number[potionind] - 1
     player1.magic = min(player1.magic+10,player1.maxm)
     
@@ -526,6 +678,11 @@ def action2(player1,player2,potion,potionind,x):
         
 
 def resoult(player=None):
+    
+    """display resoult of the duel
+    
+    player - player who won
+    """
     while 1:
         if player != None :
             text_surf, text_rect = text(str("Wygral " + player.name), lfont,BLUE)
@@ -551,6 +708,9 @@ def resoult(player=None):
 
 
 def preparation():
+    """
+    set all variables that is needed to start game
+    """
     list_year = [1,2,3,4,5,6,7,"Wybierz rok:"]
     list_year2 = [WHITE] * 7 
     list_house = ["Gryffindor","Slytherin","Ravenclaw","Hufflepuff","Wybierz dom: "]
@@ -590,6 +750,9 @@ def preparation():
     game()
 
 def game():
+    """
+    function witch runs game
+    """
     player_1.change(wand_1)
     player_2.change(wand_2)
     spells[8].cost = max(player_1.maxm,player_2.maxm)
@@ -752,8 +915,10 @@ def game():
             if (choosed_action == "Zaklęcie" and x.spells_ind !=0 and x.spells_ind !=6 and x.spells_ind !=7) or (choosed_action == "Eliksir" and x.potions_ind != 1 and x.potions_ind != 3):
                 spell_img = pg.image.load(spells_imgs[animations_count2 % len(spells_imgs)])
                 map.blit(spell_img,(x.pos[1] - shift_x * animations_count2,x.pos[2] - shift_y * animations_count2))
+            if y_wand.pos[2] == y.pos[2] - 20:
+                y_wand.pos[2] =max(min(y_wand.pos[2] - shift,400),100)
             y.pos[2] = max(min(y.pos[2] -shift,420),120)
-            y_wand.pos[2] =max(min(y_wand.pos[2] - shift,400),100)
+            
 
             if animations_count2 == 31:
                 turn = turn +1
