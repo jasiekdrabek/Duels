@@ -27,7 +27,7 @@ class Player:
         self.shield=0
         self.pos=[1,0,0,0,0] # [0-3,x,y,next_y]
         self.maxh=year*10
-        self.next=[4,4,4,4]
+        self.next=[4,4,4,4,4,4]
         self.move=1
         self.magic=year*10
         self.maxm = year * 10
@@ -35,6 +35,7 @@ class Player:
         self.tab_1=[]
         self.tab_2=[]
         self.tab_3=[]
+        self.img=""
 
     def create_tabs(self,wand):
         """
@@ -68,7 +69,6 @@ class Player:
         """
         get image of player it depend on which house he chooosed.
         """
-        img=""
         if self.house== "Gryffindor":
             img="images/1.svg"
         elif self.house == "Slytherin":
@@ -88,7 +88,7 @@ class Player:
         wand.pos[0] = 1
         wand.pos[2] = wand.pos[0]*100+100
         wand.pos[3] = wand.pos[0]*100+100
-        self.next=[4,4,4,4,4]
+        self.next=[4,4,4,4,4,4]
         self.mod(wand)
         self.modpotion = self.mods[0]
         self.modspell = self.mods[2]

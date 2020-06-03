@@ -493,6 +493,7 @@ def phase_1(x,x_wand,i):
         x.pos[3] = x.pos[2] - min(max(120,x.pos[2] + i * 100),420)
     else:
         x.move = 1
+        x.pos[3] = 0
     if turn == 1:
         turn = 6
     else:
@@ -637,6 +638,7 @@ def action(player1,player2,spell,x,wand1,wand2):
         templist = [0,1,2,3]
         templist.remove(x)
         player2.next[1] = random.choice(templist)
+    player2.next[5] = x
     player1.lastspell = spell.name
 
 
@@ -675,6 +677,8 @@ def action2(player1,player2,potion,potionind,x):
 
     if player2.shield == 1:
         player2.shield = 0
+    player1.lastspell = potion.name
+    player2.next[5] = x
         
 
 def resoult(player=None):
@@ -784,8 +788,8 @@ def game():
     for x in range(len(potions)):
         player_1.potion_number.append(potions[x].number + int(player_1.year / 2))
         player_2.potion_number.append(potions[x].number + int(player_2.year / 2))
-    image = load_svg(player_1.imgs(),0.065)
-    image2 = load_svg(player_2.imgs(),0.065)
+    player_1.img = player_1.imgs()
+    player_2.img = player_2.imgs()
     image3 = load_svg("images/scroll-152864.svg",1.55)
     image4 = load_svg("images/scrolls-34607.svg",0.8)
     flame_imgs=[]
@@ -800,6 +804,12 @@ def game():
     spells_imgs =[]
     for i in range(1,7):
         spells_imgs.append("images/Spell_"+str(i)+".png")
+    heal_imgs=[]
+    for i in range(1,9):
+        heal_imgs.append("images/Heal_"+str(i)+".png")
+    mana_imgs=[]
+    for i in range(1,9):
+        mana_imgs.append("images/Mana_"+str(i)+".png")
     animations_count = 0
     animations_count2 = 0
     phase=["",
@@ -811,7 +821,8 @@ def game():
 
     while 1:
 
-        
+        image = load_svg(player_1.img,0.065)
+        image2 = load_svg(player_2.img,0.065)        
         map.fill(BLACK)
         #obraz = pg.image.load("images/background.png")
         #map.blit(obraz,(0,0))
@@ -822,11 +833,19 @@ def game():
             x_wand = wand_1
             y = player_2
             y_wand = wand_2
+            if turn % 6 < 5 and y.lastspell == "Petrificus Totalus" and x.lastspell != "Protego"  and x.next[5] == x.pos[0]:
+                x.img="images./5.svg"
+            else:
+                x.img = x.imgs()
         else:
             x = player_2
             x_wand = wand_2
             y = player_1
             y_wand = wand_1
+            if turn % 6 <5 and y.lastspell == "Petrificus Totalus" and x.lastspell != "Protego"  and x.next[5] == x.pos[0]:
+                x.img="images./5.svg"
+            else:
+                x.img = x.imgs()
         if turn % 6 ==0:
             if (x.health <= 0 and y.health > 0):
                 resoult(y)
@@ -912,6 +931,12 @@ def game():
             shift =(y.pos[3] )/32
             shift_x=(x.pos[1] - y.pos[1] )/32
             shift_y=(x.pos[2] - x.pos[4])/32
+            if x.lastspell == "Healing potion" or x.lastspell == "Episkey":
+                heal_img = pg.image.load(heal_imgs[animations_count2 % len(heal_imgs)])
+                map.blit(heal_img,(x.pos[1],x.pos[2] -15))
+            if x.lastspell == "Magic potion":
+                mana_img = pg.image.load(mana_imgs[animations_count2 % len(mana_imgs)])
+                map.blit(mana_img,(x.pos[1],x.pos[2] -15))
             if (choosed_action == "Zaklęcie" and x.spells_ind !=0 and x.spells_ind !=6 and x.spells_ind !=7) or (choosed_action == "Eliksir" and x.potions_ind != 1 and x.potions_ind != 3):
                 spell_img = pg.image.load(spells_imgs[animations_count2 % len(spells_imgs)])
                 map.blit(spell_img,(x.pos[1] - shift_x * animations_count2,x.pos[2] - shift_y * animations_count2))
