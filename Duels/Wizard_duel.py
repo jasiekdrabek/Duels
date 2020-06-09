@@ -15,9 +15,10 @@ press = 0
 index = 0
 attack = 1
 attack2 = 0
+score = 0
 choosed_action =""
-player_1 = Player("Jan",7,"Gryffindor")
-player_2 = Player("Niejan",7,"Gryffindor")    
+player_1 = Player("Jan","Gryffindor")
+player_2 = Player("Niejan","Gryffindor")    
 wand_1 = Wand("",0)
 wand_2 = Wand("",0)
 spells = [  Spell("Brak",0,0,-20,"Brak"),
@@ -266,6 +267,53 @@ def how3():
                     pg.mixer.music.unpause()
         pd.update()
 
+def best_score():
+    """
+    display 10 best score.
+    """
+
+    while True:
+        o=pg.image.load("images/file.jpg")
+        map.blit(o,(0,0))
+        for e in pg.event.get():
+            if e.type==pg.QUIT:
+                exit()
+            if e.type==KEYDOWN:
+                if e.key==K_o:
+                    pg.mixer.music.pause()
+                if e.key==K_i:        
+                    pg.mixer.music.unpause()
+        button("",375,240,250,250,BLACK)
+        button("powrot", 400, 500, 200, 100, RED, menu)
+        lista=[]
+        scores=[]
+        plik = open("plik.txt", "r").read()
+        lines = plik.replace("\n", ":");
+        lines = lines.split(":")
+        for line in lines:
+            if line != "":
+                temp = str.isnumeric(line)
+                if temp:
+                    scores.append(int(line))
+                else:
+                    lista.append(str(line))
+        players = [x for _,x in sorted(zip(scores,lista))]
+        players.reverse()
+        scores.sort()
+        scores.reverse()
+        b=300
+        text_surf, text_rect = text("Najlepsze wyniki",font,WHITE)
+        text_rect.center = (500,b-40)
+        map.blit(text_surf, text_rect)
+        lenght = len(lista)
+        if len(lista)>10:
+            lenght = 10
+        for g in range (lenght):
+            text_surf, text_rect = text(str(g+1)+"."+ str(players[g]) +": "+ str(scores[g]),font,WHITE)
+            map.blit(text_surf, (400,b))
+            b=b+20
+        pd.update()
+
 def main():
     """
     main function start game.
@@ -301,8 +349,9 @@ def menu():
 
         map.blit(obraz,(0,0))
 
-        button("Graj", 400, 300, 200, 100, GREEN, preparation)
-        button("Jak grac", 400, 400, 200, 100, YELLOW, how,["images/how.jpg"])
+        button("Graj", 400, 200, 200, 100, GREEN, choose_mode)
+        button("Jak grac", 400, 300, 200, 100, YELLOW, how,["images/how.jpg"])
+        button("Najlepsze wyniki",400,400,200,100,PURPLE,best_score)
         button("wyjscie", 400, 500, 200, 100,RED , exit)
         
         pd.update()
@@ -687,6 +736,37 @@ def resoult(player=None):
     
     player - player who won
     """
+    if player_2.computer == "Yes" and (player.computer == "" or player == None):
+        global score 
+        score = score + 1
+        list_house = ["Gryffindor","Slytherin","Ravenclaw","Hufflepuff"]
+        list_lenght = [8,9,10,11,12]
+        list_core = ["Dragon","Unicorn","Testral","Phoenix","Chimera"]
+        player_2.house = list_house[random.randint(0, len(list_house)-1)]
+        wand_2.core = list_core[random.randint(0,len(list_core)-1)]
+        wand_2.lenght = list_lenght[random.randint(0,len(list_lenght)-1)]
+        text_surf, text_rect = text("Gratulaceje wygrałeś pojedynek", lfont,BLUE)
+        text_rect.center = ((size + 400) / 2), ((size - 400) / 2)
+        map.blit(text_surf, text_rect)
+        text_surf, text_rect = text("Zaraz rozpocznie się kolejna runda", lfont,BLUE)
+        text_rect.center = ((size + 400) / 2), ((size - 300) / 2)
+        map.blit(text_surf, text_rect)
+        pd.update()
+        time.sleep(1)
+        game()
+    if player_2.computer == "Yes" and (player.computer == "Yes" or player ==None):
+        plik = open("plik.txt", "a")
+        plik.write(str(player_1.name) +":" + str(score)+"\n")
+        plik.close()
+        text_surf, text_rect = text(str("Koniec gry"), lfont,BLUE)
+        text_rect.center = ((size + 400) / 2), ((size - 300) / 2)
+        map.blit(text_surf, text_rect)
+        text_surf, text_rect = text("Wygrałeś " + str(score) + " pojedyków", lfont,BLUE)
+        text_rect.center = ((size + 400) / 2), ((size - 400) / 2)
+        map.blit(text_surf, text_rect)
+        pd.update()
+        time.sleep(1)
+        menu()
     while 1:
         if player != None :
             text_surf, text_rect = text(str("Wygral " + player.name), lfont,BLUE)
@@ -710,27 +790,42 @@ def resoult(player=None):
                     #pg.mixer.music.unpause()
                     print("ok")
 
+def choose_mode():
+    obraz=pg.image.load("images/file.jpg")
+    map.blit(obraz,(0,0))
+    text_surf, text_rect = text("Wybierz tryb gry", lfont,WHITE)
+    text_rect.center = (500,50)
+    map.blit(text_surf, text_rect)
+    while True:
+        for e in pg.event.get():
+            
+            if e.type == pg.QUIT:
+                sys.exit(0)
 
-def preparation():
+        button("PvP", 400, 200, 200, 100, ORANGE, preparation)
+        button("vs Komputer", 400, 400, 200, 100, ORANGE, preparation,["Yes"])
+        
+        pd.update()
+
+def preparation(computer = ""):
     """
     set all variables that is needed to start game
     """
-    list_year = [1,2,3,4,5,6,7,"Wybierz rok:"]
-    list_year2 = [WHITE] * 7 
+    player_2.computer = computer
     list_house = ["Gryffindor","Slytherin","Ravenclaw","Hufflepuff","Wybierz dom: "]
     list_house2 = [WHITE] * 4
     list_house3 = [["spell +","magic 0","health 0","potion -"],
                     ["spell 0","magic 0","health -","potion +"],
                     ["spell -","magic +","health 0","potion 0"],
                     ["spell 0","magic -","health +","potion 0"]]
-    list_lenght = [8,9,10,11,12,"Wybierz dlugosc rozdzczki:"]
+    list_lenght = [8,9,10,11,12,"Wybierz dlugosc rozdzki:"]
     list_lenght2 = [WHITE] * 5
     list_lenght3 = [["spell ++","magic ++","health --","potion --"],
                      ["spell +","magic +","health -","potion -"],
                      ["spell 0","magic 0","health 0","potion 0"],
                      ["spell -","magic -","health +","potion +"],
                      ["spell --","magic --","health ++","potion ++"],]
-    list_core = ["Dragon","Unicorn","Testral","Phoenix","Chimera","Wybierz rdzen rozdzczki:"]
+    list_core = ["Dragon","Unicorn","Testral","Phoenix","Chimera","Wybierz rdzen rozdzki:"]
     list_core2 = [WHITE] * 5
     list_core3 = [["spell 0","magic +","health 0","potion -"],
                    ["spell 0","magic -","health +","potion 0"],
@@ -739,16 +834,20 @@ def preparation():
                    ["spell -","magic 0","health 0","potion +"]]
     
     write(player_1)
-    player_1.year = choose(player_1,player_1.year,list_year,list_year2)
     player_1.house = choose(player_1,player_1.house,list_house,list_house2,list_house3)
     wand_1.lenght = choose(player_1,wand_1.lenght,list_lenght,list_lenght2,list_lenght3)
     wand_1.core = choose(player_1,wand_1.core,list_core,list_core2,list_core3)
 
-    write(player_2)
-    player_2.year = choose(player_2,player_2.year,list_year,list_year2)
-    player_2.house = choose(player_2,player_2.house,list_house,list_house2,list_house3)
-    wand_2.lenght = choose(player_2,wand_2.lenght,list_lenght,list_lenght2,list_lenght3)
-    wand_2.core = choose(player_2,wand_2.core,list_core,list_core2,list_core3)
+    if player_2.computer == "Yes":
+        player_2.name = "Komputer"
+        player_2.house = list_house[random.randint(0, len(list_house)-2)]
+        wand_2.core = list_core[random.randint(0,len(list_core)-2)]
+        wand_2.lenght = list_lenght[random.randint(0,len(list_lenght)-2)]
+    else:
+        write(player_2)
+        player_2.house = choose(player_2,player_2.house,list_house,list_house2,list_house3)
+        wand_2.lenght = choose(player_2,wand_2.lenght,list_lenght,list_lenght2,list_lenght3)
+        wand_2.core = choose(player_2,wand_2.core,list_core,list_core2,list_core3)
     
 
     game()
@@ -757,11 +856,14 @@ def game():
     """
     function witch runs game
     """
-    player_1.change(wand_1)
+    global score,turn, attack,attack2 
+    if score == 0:
+        player_1.change(wand_1)
+    else:
+        player_1.health = min(20 + player_1.health,player_1.maxh)
     player_2.change(wand_2)
     spells[8].cost = max(player_1.maxm,player_2.maxm)
     spells[8].dmg = max(player_1.maxh,player_2.maxh)
-    global turn, attack,attack2 
     turn = 0 
     attack = 1
     attack2 = 0 
@@ -857,6 +959,34 @@ def game():
         map.blit(board2,(630,100))
         map.blit(image3,(-260,-160))
         map.blit(image3,(480,-160))
+        if x.computer == "Yes" and turn % 6 == 1:
+            temp = [-1,0,1]
+            phase_1(x,x_wand,random.choice(temp))
+            if x.pos[0] == x_wand.pos[0] and x.magic >=10:
+                choose_action("Zaklęcie")
+                temp=[]
+                for z in range(len(spells)):
+                    if spells[z].cost <= x.magic:
+                        temp.append(z)
+            else:
+                temp=[]
+                choose_action("Eliksir")
+                for z in range(len(potions)):
+                    if potions[z].number > 0:
+                        temp.append(z)
+                if temp == []:
+                    global choosed_action 
+                    choosed_action = "Zaklęcie"
+                    for z in range(len(spells)):
+                        if spells[z].cost <= x.magic:
+                            temp.append(z)
+            x.spells_ind = random.choice(temp)
+            phase_2(x,spells,x_wand)
+            temp =[0,1,2,3]
+            x.next[4]=random.choice(temp)
+            x.pos[4]= x.next[4] *100 +120
+            attack2 = 1
+            phase_3(x,y,spells,potions,x_wand,y_wand)
         if turn % 6 > 0  and turn % 6<5:
             map.blit(image4,(0,300))
 
@@ -866,8 +996,7 @@ def game():
         text_surf, text_rect = text(str(phase[turn % 6]),mfont,WHITE)
         text_rect.center = (500,80)
         map.blit(text_surf, text_rect)
-        #if turn % 5 > 1 :
-         #   button("powrót",200,450,50,50,RED)
+
         if turn % 6 == 1:
             button("W górę",30,330,200,50,ORANGE,phase_1,[x,x_wand,-1])
             button("Zostań w miejscu",30,380,200,50,ORANGE, phase_1,[x,x_wand,0])
@@ -877,8 +1006,8 @@ def game():
             button("Zaklęcie",30,330,200,50,ORANGE,choose_action,["Zaklęcie"])
             button("Eliksir",30,430,200,50,ORANGE,choose_action,["Eliksir"])
         if turn % 6 == 3:
-            button("P",20,380,50,50,ORANGE,phase_2_3,[x,-1])
-            button("D",220,380,50,50,ORANGE,phase_2_3,[x,1])
+            button("<",20,380,50,50,ORANGE,phase_2_3,[x,-1])
+            button(">",220,380,50,50,ORANGE,phase_2_3,[x,1])
             button("Zatwierdź",30,430,200,50,ORANGE,phase_2,[x,spells,x_wand])
         if turn % 6 == 4:
             if (spells[x.spells_ind].dmg != 0 and choosed_action == "Zaklęcie") or (potions[x.potions_ind].dmg != 0 and choosed_action == "Eliksir"):
@@ -907,8 +1036,6 @@ def game():
                             map.blit(flame_img,(j.pos[1] + 20 * k - 40,i*100 +100))
                     elif i == j.next[2] or i == j.next[3]:
                         map.blit(toxic_img,(j.pos[1],i *100 +100))
-                #else:
-                 #   button("",j.pos[1],i*100 +100,100,100,WHITE)
                 
                 if i == j.next[4] :
                     button("",l.pos[1],i*100+100,100,100,ORANGE)
@@ -927,7 +1054,6 @@ def game():
             shield_img = pg.image.load(shield_imgs[-1])
             map.blit(shield_img,(y.pos[1],y.pos[2] -15))
         if turn % 6 ==5:
-            #to do
             shift =(y.pos[3] )/32
             shift_x=(x.pos[1] - y.pos[1] )/32
             shift_y=(x.pos[2] - x.pos[4])/32
@@ -997,9 +1123,9 @@ def game():
             text_surf, text_rect = text(str("tura gracza: " + player_2.name),lfont,BLUE)
             text_rect.center = (500,300)
             map.blit(text_surf, text_rect)
-
-        button("Reset", 850, 450, 150, 50, GREEN,game)
-        button("Reset postaci",850,500,150,50,ORANGE,preparation)
+        if player_2.computer != "Yes":
+            button("Reset", 850, 450, 150, 50, GREEN,game)
+            button("Reset postaci",850,500,150,50,ORANGE,preparation)
         button("Menu",850,550,150,50,RED,menu)
 
         pd.flip()
@@ -1015,12 +1141,6 @@ def game():
                 if turn % 6 == 0 :
                     if e.key == K_RETURN:
                         turn =turn +1
-                #if turn % 6 ==5:
-                 #   if e.key == K_RETURN:
-                  #      x.pos[2] = max(min(x.pos[2] -shift,400),120)
-                   #     x_wand.pos[2] =max(min(x_wand.pos[2] - shift,400),100)
-                    #    animations_count2 = -1
-                     #   turn = turn + 1
 
                 if turn % 6 == 1 :
                     if e.key == K_RIGHT or e.key == K_LEFT:

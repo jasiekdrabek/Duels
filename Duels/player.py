@@ -7,7 +7,7 @@ class Player:
     """
     class where all information about player are stored.
     """
-    def __init__(self,name,year,house):
+    def __init__(self,name,house):
         """
         set name, year and house other set atributes are related to them. 
         """
@@ -16,9 +16,9 @@ class Player:
         self.lastspell =""
         self.spells_ind = 0 
         self.potions_ind = 0 
-        self.year=year
+        self.year=7
         self.house=house
-        self.health=year*10
+        self.health=self.year*10
         self.mods = [1,1,1,1]
         self.modpotion=self.mods[0]
         self.modhealth=self.mods[1]
@@ -26,16 +26,17 @@ class Player:
         self.modmagic=self.mods[3]
         self.shield=0
         self.pos=[1,0,0,0,0] # [0-3,x,y,next_y]
-        self.maxh=year*10
+        self.maxh=self.year*10
         self.next=[4,4,4,4,4,4]
         self.move=1
-        self.magic=year*10
-        self.maxm = year * 10
+        self.magic=self.year*10
+        self.maxm = self.year * 10
         self.potion_number=[]
         self.tab_1=[]
         self.tab_2=[]
         self.tab_3=[]
         self.img=""
+        self.computer = ""
 
     def create_tabs(self,wand):
         """
